@@ -49,9 +49,9 @@ export type NormalTableQueryFn<T> = (
 
 interface NormalTableProps<T> {
 	columns: ColumnDef<T>[];
-	initPaginationState: PaginationState;
 	queryKey: string[] | string;
 	queryFn: NormalTableQueryFn<T>;
+	initPaginationState?: PaginationState;
 	pageSizeOptions?: number[];
 	paginationPosition?: "inside" | "outside";
 	shadowStyle?: "none" | "default";
@@ -67,12 +67,10 @@ export function NormalTable<T>({
 	className,
 	queryFn,
 	queryKey,
-	initPaginationState,
 	paginationPosition = "inside",
 	shadowStyle = "default",
-	pageSizeOptions = initPaginationState
-		? [initPaginationState.pageSize]
-		: [10, 20],
+	initPaginationState = { pageIndex: 0, pageSize: 10 },
+	pageSizeOptions = [10, 20, 50],
 	...props
 }: React.ComponentProps<"div"> & NormalTableProps<T>) {
 	const [pagination, setPagination] =
@@ -150,7 +148,7 @@ export function NormalTable<T>({
 						>
 							{headerGroup.headers.map((header) => (
 								<TableHead
-									className="text-center text-sm font-normal h-12"
+									className="text-center text-sm font-bold h-12"
 									key={header.id}
 								>
 									{header.isPlaceholder
