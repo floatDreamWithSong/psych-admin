@@ -16,3 +16,24 @@ export const formatNumber = (number?: number) => {
 export const formatRate2Percentage = (rate?: number) => {
 	return rate ? rate * 100 : 0;
 };
+
+export const formatWeek = (week?: number) => {
+	switch (week) {
+		case 1:
+			return "Mon";
+		case 2:
+			return "Tue";
+		case 3:
+			return "Wed";
+		case 4:
+			return "Thu";
+		case 5:
+			return "Fri";
+		case 6:
+			return "Sat";
+		case 7:
+			return "Sun";
+		default:
+			return "-";
+	}
+};

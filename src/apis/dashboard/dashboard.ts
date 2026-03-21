@@ -1,4 +1,5 @@
 import { request } from "@/lib/request";
+import type { Emotion, RiskGender, RiskLevel } from "../common/constant";
 
 interface DashboardRequest {
 	unitId: string;
@@ -32,34 +33,24 @@ export const getDataOverView = (data: DashboardRequest) =>
 		data,
 	});
 
-export interface CoreapiKeyword {
-	count: number;
-	keyword: string;
-}
-
 export interface CoreapiRiskDistribution {
 	count: number;
-	/**
-	 * 0=all 1=male 2=female
-	 */
-	gender: number;
-	/**
-	 * 0=正常 1=低危 2=中危 3=高危
-	 */
-	level: number;
-}
-
-export interface EmotionRatio {
-	danger: number; // 危险情绪占比
-	negative: number; // 负面情绪占比
-	neutral: number; // 中性情绪占比
-	positive: number; // 正向情绪占比
+	// 0=all 1=male 2=female
+	gender: RiskGender;
+	// 1-4: High | Medium | Low | Normal
+	level: RiskLevel;
 }
 
 export const getPsychTrend = (data: DashboardRequest) =>
 	request<{
-		emotionRatio: EmotionRatio;
-		keywords: CoreapiKeyword[];
+		emotionRatio: {
+			ratio: Record<Emotion, number>;
+			total: number;
+		};
+		keywords: {
+			keywordMap: Record<string, number>;
+			keywTotal: number;
+		};
 		risks: CoreapiRiskDistribution[];
 	}>({
 		url: "/dashboard/psych_trend",
@@ -67,9 +58,23 @@ export const getPsychTrend = (data: DashboardRequest) =>
 		data,
 	});
 
-// TODO: 暂未实现
+export interface Point {
+	week: number;
+	hour: number;
+	count: number;
+}
+
+export interface Duration {
+	minutes: number;
+	count: number;
+}
+
 export const getDataTrend = (data: Partial<DashboardRequest>) =>
-	request({
+	request<{
+		activePoints: Point[];
+		conversationDurations: Duration[];
+		conversationPoints: Point[];
+	}>({
 		url: "/dashboard/trend",
 		method: "POST",
 		data,

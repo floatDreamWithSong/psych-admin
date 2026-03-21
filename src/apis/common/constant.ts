@@ -31,3 +31,26 @@ export const Role = {
 	SUPER_ADMIN: 5,
 } as const;
 export type Role = (typeof Role)[keyof typeof Role];
+
+export const Emotion = {
+	DANGER: "1",
+	DEPRESS: "2",
+	NEGATIVE: "3",
+	NORMAL: "4",
+} as const;
+export type Emotion = (typeof Emotion)[keyof typeof Emotion];
+
+export const RiskGender = {
+	ALL: 0,
+	MALE: 1,
+	FEMALE: 2,
+} as const;
+export type RiskGender = (typeof RiskGender)[keyof typeof RiskGender];
+
+export const RiskLevel = {
+	NORMAL: 1,
+	LOW: 2,
+	MEDIUM: 3,
+	HIGH: 4,
+} as const;
+export type RiskLevel = (typeof RiskLevel)[keyof typeof RiskLevel];

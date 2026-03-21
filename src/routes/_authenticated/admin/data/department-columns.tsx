@@ -78,11 +78,12 @@ export const departmentColumns: Array<ColumnDef<PanelData>> = [
 	{
 		accessorKey: "actions",
 		header: "操作",
+		// TODO: 等后端修改为动态路由
 		cell: ({ row }) => {
 			return (
 				<Link
 					to="/admin/panel/detail/$id"
-					params={{ id: row.original.departmentName }}
+					params={{ id: "691f10a80c8a2207a770ff24" }}
 					className="cursor-pointer text-gradient-2 hover:underline text-sm bg-transparent border-none"
 				>
 					查看详情
