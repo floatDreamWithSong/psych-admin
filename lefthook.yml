@@ -1,0 +1,5 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: format and lint fix
+      run: pnpm fix

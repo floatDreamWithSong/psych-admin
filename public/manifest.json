@@ -1,0 +1,15 @@
+{
+  "short_name": "Psychology Admin",
+  "name": "Psychology Admin",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "46x46",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

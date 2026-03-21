@@ -1,0 +1,17 @@
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(
+      auto-fill,
+      minmax(calc(var(--spacing) * 99), 1fr)
+    );
+  gap: 16px;
+}
+
+.class-card {
+  background: linear-gradient(
+    96.42deg,
+    rgba(195, 195, 255, 0.25) -15.65%,
+    rgba(211, 226, 255, 0.25) 56.65%,
+    rgba(213, 230, 255, 0.25) 108.35%
+  );
+}
