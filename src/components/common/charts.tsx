@@ -36,6 +36,7 @@ type ActivityChartProps = {
 	title?: string;
 	borderStyle?: "squre-border" | "none";
 	drawYAxis?: boolean;
+	yAxisUnit?: string;
 	xAxisPosition?: "top" | "bottom";
 	drawCartesianGrid?: "horizontal" | "vertical" | "both" | "none";
 } & (
@@ -66,6 +67,7 @@ function ActivityChart(props: ActivityChartProps & ChartProps) {
 		containerClassName,
 		borderStyle = "squre-border",
 		drawYAxis = false,
+		yAxisUnit,
 		xAxisPosition = "top",
 		drawCartesianGrid = "vertical",
 		...rest
@@ -199,7 +201,7 @@ function ActivityChart(props: ActivityChartProps & ChartProps) {
 							axisLine={false}
 							tickLine={false}
 							tick={{ fontSize: 12, fill: "#999" }}
-							unit="min"
+							unit={yAxisUnit}
 						/>
 						<ChartTooltip content={<ChartTooltipContent />} />
 						<Bar
