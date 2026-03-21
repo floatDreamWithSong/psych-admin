@@ -4,7 +4,6 @@ import {
 	NormalTable,
 	type NormalTableQueryFn,
 } from "@/components/common/normal-table";
-import dayjs from "dayjs";
 
 const DepartmentTable = ({
 	className,
@@ -22,7 +21,7 @@ const DepartmentTable = ({
 			totalUser: unit.userCount,
 			avgConversationDuration: unit.averageConversationMinutes,
 			highRiskUserCount: unit.riskUserCount,
-			lastUpdateTime: dayjs(unit.updateTime).format("YYYY-MM-DD"),
+			lastUpdateTime: unit.updateTime,
 		}));
 		return {
 			data: data.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),

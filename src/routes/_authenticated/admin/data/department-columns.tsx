@@ -1,6 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
+import dayjs from "dayjs";
 
 export interface PanelData {
 	departmentType: string;
@@ -9,7 +10,7 @@ export interface PanelData {
 	totalUser: number;
 	avgConversationDuration: number;
 	highRiskUserCount: number;
-	lastUpdateTime: string;
+	lastUpdateTime: number;
 }
 
 export const departmentColumns: Array<ColumnDef<PanelData>> = [
@@ -72,14 +73,18 @@ export const departmentColumns: Array<ColumnDef<PanelData>> = [
 		accessorKey: "lastUpdateTime",
 		header: "最近更新时间",
 		cell: ({ row }) => {
-			return <span>{row.original.lastUpdateTime}</span>;
+			return (
+				<span>
+					{dayjs.unix(row.original.lastUpdateTime).format("YYYY-MM-DD HH:mm")}
+				</span>
+			);
 		},
 	},
 	{
 		accessorKey: "actions",
 		header: "操作",
 		// TODO: 等后端修改为动态路由
-		cell: ({ row }) => {
+		cell: () => {
 			return (
 				<Link
 					to="/admin/panel/detail/$id"

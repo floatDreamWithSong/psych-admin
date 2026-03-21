@@ -54,3 +54,8 @@ export const RiskLevel = {
 	HIGH: 4,
 } as const;
 export type RiskLevel = (typeof RiskLevel)[keyof typeof RiskLevel];
+
+export const AlarmStudentStatus = {
+	PENDING: 1,
+	PROCESSED: 2,
+};
