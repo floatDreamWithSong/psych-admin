@@ -2,11 +2,13 @@ import { CardHeaderTitle, CardLayout } from "@layouts/card-layout";
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ThemeProps } from "@/lib/theme";
+import { formatNumber, formatRate2Percentage } from "@/lib/format";
 
 export interface IndexCardProps {
 	title: string;
-	value: string;
-	percentage: number;
+	value?: number;
+	valueUnit?: string;
+	percentage?: number;
 	props?: ThemeProps;
 	icon: React.ReactNode;
 }
@@ -29,7 +31,9 @@ export const IndexOverview = ({
 				</CardHeaderTitle>
 			)}
 			<div className="flex gap-5 flex-wrap">
-				{datas.map(({ icon, percentage, title, value, props }) => {
+				{datas.map(({ icon, percentage, title, value, valueUnit, props }) => {
+					const valueString = formatNumber(value);
+					percentage = formatRate2Percentage(percentage);
 					const percentageString =
 						Math.abs(percentage) < 10
 							? percentage.toFixed(2)
@@ -40,7 +44,7 @@ export const IndexOverview = ({
 								<CardHeaderTitle variant="secondary">{title}</CardHeaderTitle>
 								<div>
 									<p className="text-4xl h-15 leading-15 line-height-15 font-medium">
-										{value}
+										{valueString} {valueUnit}
 									</p>
 									<div className="flex gap-1.5">
 										<div

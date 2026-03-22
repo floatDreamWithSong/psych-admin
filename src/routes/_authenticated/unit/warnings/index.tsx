@@ -13,7 +13,6 @@ import { useStore } from "zustand";
 import { getAlarmOverview } from "@/apis/dashboard/alarm";
 import { userStore } from "@/store/user";
 import { useQuery } from "@tanstack/react-query";
-import { formatNumber, formatRate2Percentage } from "@/lib/format";
 import AlarmUserTable from "./components/alarm-user-table";
 
 export const Route = createFileRoute("/_authenticated/unit/warnings/")({
@@ -29,26 +28,30 @@ function RouteComponent() {
 	const datas = [
 		{
 			title: "当前高风险用户总数",
-			value: `${formatNumber(alarmOverview?.total)}人`,
-			percentage: formatRate2Percentage(alarmOverview?.totalChange),
+			value: alarmOverview?.total,
+			valueUnit: "人",
+			percentage: alarmOverview?.totalChange,
 			icon: <PanelWarningIcon />,
 		},
 		{
 			title: "待处理高风险用户数",
-			value: `${formatNumber(alarmOverview?.pending)}人`,
-			percentage: formatRate2Percentage(alarmOverview?.pendingChange),
+			value: alarmOverview?.pending,
+			valueUnit: "人",
+			percentage: alarmOverview?.pendingChange,
 			icon: <PanelWarningIcon />,
 		},
 		{
 			title: "已处理高风险用户数",
-			value: `${formatNumber(alarmOverview?.processed)}人`,
-			percentage: formatRate2Percentage(alarmOverview?.processedChange),
+			value: alarmOverview?.processed,
+			valueUnit: "人",
+			percentage: alarmOverview?.processedChange,
 			icon: <PanelUserIcon />,
 		},
 		{
 			title: "需追踪用户总数",
-			value: `${formatNumber(alarmOverview?.track)}人`,
-			percentage: formatRate2Percentage(alarmOverview?.trackChange),
+			value: alarmOverview?.track,
+			valueUnit: "人",
+			percentage: alarmOverview?.trackChange,
 			icon: <PanelUserIcon />,
 		},
 	];

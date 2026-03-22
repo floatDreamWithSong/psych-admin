@@ -22,7 +22,7 @@ import {
 	getDataTrend,
 	getPsychTrend,
 } from "@/apis/dashboard/dashboard";
-import { formatNumber, formatRate2Percentage, formatWeek } from "@/lib/format";
+import { formatWeek } from "@/lib/format";
 import { Emotion, RiskGender, RiskLevel } from "@/apis/common/constant";
 
 export const Route = createFileRoute("/_authenticated/unit/panel/")({
@@ -69,42 +69,37 @@ function RouteComponent() {
 		? [
 				{
 					title: "学生总数",
-					value: `${formatNumber(dataOverview.totalUsers)}人`,
-					percentage: formatRate2Percentage(
-						dataOverview.weeklyIncreaseUsersRate,
-					),
+					value: dataOverview.totalUsers,
+					valueUnit: "人",
+					percentage: dataOverview.weeklyIncreaseUsersRate,
 					icon: <HomeIcon />,
 				},
 				{
 					title: "活跃用户数",
-					value: `${formatNumber(dataOverview.activeUsers)}人`,
-					percentage: formatRate2Percentage(
-						dataOverview.weeklyIncreaseActiveUsersRate,
-					),
+					value: dataOverview.activeUsers,
+					valueUnit: "人",
+					percentage: dataOverview.weeklyIncreaseActiveUsersRate,
 					icon: <PanelUserIcon />,
 				},
 				{
 					title: "总对话数",
-					value: `${formatNumber(dataOverview.totalConversations)}次`,
-					percentage: formatRate2Percentage(
-						dataOverview.weeklyIncreaseConversationsRate,
-					),
+					value: dataOverview.totalConversations,
+					valueUnit: "次",
+					percentage: dataOverview.weeklyIncreaseConversationsRate,
 					icon: <MessageIcon />,
 				},
 				{
 					title: "平均单次对话时长",
-					value: `${formatNumber(dataOverview.averageTimePerConversation)}min`,
-					percentage: formatRate2Percentage(
-						dataOverview.weeklyIncreaseAverageTimePerConversationRate,
-					),
+					value: dataOverview.averageTimePerConversation,
+					valueUnit: "min",
+					percentage: dataOverview.weeklyIncreaseAverageTimePerConversationRate,
 					icon: <ClockIcon />,
 				},
 				{
 					title: "当前高风险用户数",
-					value: `${formatNumber(dataOverview.alarmUsers)}人`,
-					percentage: formatRate2Percentage(
-						dataOverview.weeklyIncreaseAlarmUsersRate,
-					),
+					value: dataOverview.alarmUsers,
+					valueUnit: "人",
+					percentage: dataOverview.weeklyIncreaseAlarmUsersRate,
 					props: {
 						"data-theme": "danger",
 					},
