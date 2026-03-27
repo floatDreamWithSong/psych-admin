@@ -49,7 +49,7 @@ export interface CoreapiRiskDistribution {
 export const getPsychTrend = (data: DashboardRequest) =>
 	request<{
 		emotionRatio: {
-			ratio: Record<Emotion, number>;
+			ratio: Record<`${Emotion}`, number>;
 			total: number;
 		};
 		keywords: {

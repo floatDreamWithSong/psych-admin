@@ -12,17 +12,17 @@ export const Route = createFileRoute("/_authenticated/admin/panel/$id")({
 });
 
 const emotionKey = new Map<string, string>([
-	[Emotion.DANGER, "危险"],
-	[Emotion.DEPRESS, "负面"],
-	[Emotion.NEGATIVE, "中性"],
-	[Emotion.NORMAL, "正向"],
+	[Emotion.DANGER.toString(), "危险"],
+	[Emotion.DEPRESS.toString(), "负面"],
+	[Emotion.NEGATIVE.toString(), "中性"],
+	[Emotion.NORMAL.toString(), "正向"],
 ]);
 
 const emotionFill = new Map<string, string>([
-	[Emotion.DANGER, "var(--pie-1)"],
-	[Emotion.DEPRESS, "var(--pie-2)"],
-	[Emotion.NEGATIVE, "var(--pie-3)"],
-	[Emotion.NORMAL, "var(--pie-4)"],
+	[Emotion.DANGER.toString(), "var(--pie-1)"],
+	[Emotion.DEPRESS.toString(), "var(--pie-2)"],
+	[Emotion.NEGATIVE.toString(), "var(--pie-3)"],
+	[Emotion.NORMAL.toString(), "var(--pie-4)"],
 ]);
 
 const riskLevelKey = new Map<RiskLevel, string>([

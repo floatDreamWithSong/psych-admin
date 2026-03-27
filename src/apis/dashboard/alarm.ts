@@ -4,6 +4,7 @@ import type {
 	BasicPaginationOption,
 	User,
 } from "../common/type";
+import type { Emotion, ProcessStatus } from "../common/constant";
 
 export interface AlarmOverview {
 	pending: number;
@@ -58,10 +59,10 @@ export const getAlarmOverview = (data: { unitId: string }) =>
 //  高风险用户列表
 export const getAlarmList = (data: {
 	unitId: string;
-	emotion?: string[];
-	keyword?: string[];
+	emotion?: Emotion;
+	keyword?: string;
 	paginationOptions: BasicPaginationOption;
-	status?: string[];
+	status?: ProcessStatus;
 }) =>
 	request<{
 		pagination: BasicPagination;

@@ -20,14 +20,14 @@ import {
 import { useStore } from "zustand";
 import { userStore } from "@/store/user";
 import { useState } from "react";
-import { Emotion } from "@/apis/common/constant";
+import { Emotion, ProcessStatus } from "@/apis/common/constant";
 import { getAlarmList } from "@/apis/dashboard/alarm";
 import { alarmUserColumns, type AlarmUserRow } from "../data/alarm-user-column";
 
 const AlarmUserTable = () => {
 	const unitId = useStore(userStore, (state) => state.user!.unitId);
-	const [emotion, setEmotion] = useState("all");
-	const [status, setStatus] = useState("all");
+	const [emotion, setEmotion] = useState<Emotion | "all">("all");
+	const [status, setStatus] = useState<ProcessStatus | "all">("all");
 	const [keyword, setKeyword] = useState("");
 
 	const tableKey = ["unit-alarm-list", unitId, emotion, status, keyword].join(
@@ -40,9 +40,9 @@ const AlarmUserTable = () => {
 	}) => {
 		const { records, pagination } = await getAlarmList({
 			unitId,
-			emotion: emotion === "all" ? undefined : [emotion],
-			status: status === "all" ? undefined : [status],
-			keyword: keyword.trim() ? [keyword.trim()] : undefined,
+			emotion: emotion === "all" ? undefined : emotion,
+			status: status === "all" ? undefined : status,
+			keyword: keyword.trim().length > 0 ? keyword.trim() : undefined,
 			paginationOptions: {
 				page: pageIndex + 1,
 				limit: pageSize,
@@ -67,32 +67,53 @@ const AlarmUserTable = () => {
 
 	return (
 		<CardLayout variant="area" className="mt-5.25">
-			<div className="flex justify-between flex-wrap">
+			<div className="flex justify-between flex-wrap gap-2">
 				<CardHeaderTitle variant="light">高风险用户详情</CardHeaderTitle>
 				<div className="flex gap-3 flex-wrap">
-					<Select value={emotion} onValueChange={setEmotion}>
+					<Select
+						value={emotion.toString()}
+						onValueChange={(value) => {
+							if (value === "all") {
+								setEmotion("all");
+							} else {
+								setEmotion(Number(value) as Emotion);
+							}
+						}}
+					>
 						<Label>情绪类型</Label>
 						<SelectTrigger>
 							<SelectValue placeholder="全部类型" />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">全部类型</SelectItem>
-							<SelectItem value={Emotion.NORMAL}>正向</SelectItem>
-							<SelectItem value={Emotion.DEPRESS}>负面</SelectItem>
-							<SelectItem value={Emotion.NEGATIVE}>中性</SelectItem>
-							<SelectItem value={Emotion.DANGER}>危险</SelectItem>
+							<SelectItem value={Emotion.NORMAL.toString()}>正向</SelectItem>
+							<SelectItem value={Emotion.DEPRESS.toString()}>负面</SelectItem>
+							<SelectItem value={Emotion.NEGATIVE.toString()}>中性</SelectItem>
+							<SelectItem value={Emotion.DANGER.toString()}>危险</SelectItem>
 						</SelectContent>
 					</Select>
-					<Select value={status} onValueChange={setStatus}>
+					<Select
+						value={status.toString()}
+						onValueChange={(value) => {
+							if (value === "all") {
+								setStatus("all");
+							} else {
+								setStatus(Number(value) as ProcessStatus);
+							}
+						}}
+					>
 						<Label>处理状态</Label>
 						<SelectTrigger>
 							<SelectValue placeholder="全部状态" />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">全部状态</SelectItem>
-							<SelectItem value="pending">待处理</SelectItem>
-							<SelectItem value="processed">已处理</SelectItem>
-							<SelectItem value="track">需追踪</SelectItem>
+							<SelectItem value={ProcessStatus.PENDING.toString()}>
+								待处理
+							</SelectItem>
+							<SelectItem value={ProcessStatus.PROCESSED.toString()}>
+								已处理
+							</SelectItem>
 						</SelectContent>
 					</Select>
 					<InputGroup className="max-w-50">
@@ -112,7 +133,13 @@ const AlarmUserTable = () => {
 				className="p-0 mt-5"
 				columns={alarmUserColumns}
 				queryFn={queryFn}
-				queryKey={["unit-alarm-list", unitId, emotion, status, keyword]}
+				queryKey={[
+					"unit-alarm-list",
+					unitId,
+					emotion.toString(),
+					status.toString(),
+					keyword,
+				]}
 				paginationPosition="inside"
 				shadowStyle="none"
 			/>

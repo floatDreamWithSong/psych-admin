@@ -33,10 +33,10 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role];
 
 export const Emotion = {
-	DANGER: "1",
-	DEPRESS: "2",
-	NEGATIVE: "3",
-	NORMAL: "4",
+	DANGER: 1,
+	DEPRESS: 2,
+	NEGATIVE: 3,
+	NORMAL: 4,
 } as const;
 export type Emotion = (typeof Emotion)[keyof typeof Emotion];
 
@@ -91,3 +91,10 @@ export const getConversationDurationLabel = (key: ConversationDuration) => {
 			return "120+";
 	}
 };
+
+// 1-2: Processed | Pending
+export const ProcessStatus = {
+	PROCESSED: 1,
+	PENDING: 2,
+} as const;
+export type ProcessStatus = (typeof ProcessStatus)[keyof typeof ProcessStatus];
