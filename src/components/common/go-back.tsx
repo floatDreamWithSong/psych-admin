@@ -1,12 +1,13 @@
 import { SquareArrowLeft } from "lucide-react";
 import { Button } from "../ui/button";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 
 export default function GoBack({
-	children,
+	// children,
 	className,
 }: React.ComponentProps<typeof Link>) {
+	const router = useRouter();
 	return (
 		<Button
 			className={cn(
@@ -15,7 +16,10 @@ export default function GoBack({
 			)}
 			asChild
 		>
-			<Link to="..">{children || <SquareArrowLeft className="size-6" />}</Link>
+			{/* <Link to="..">{children || <SquareArrowLeft className="size-6" />}</Link> */}
+			<Button variant="ghost" size="icon" onClick={() => router.history.back()}>
+				<SquareArrowLeft className="size-6 stroke-white" />
+			</Button>
 		</Button>
 	);
 }

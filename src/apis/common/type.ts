@@ -1,4 +1,4 @@
-import type { Gender, UserCodeType } from "./constant";
+import type { Gender, Grade, UserCodeType } from "./constant";
 
 export interface BasicPaginationOption {
 	limit: number;
@@ -27,10 +27,10 @@ export interface UserInfo {
 	gender: Gender;
 	status: string;
 	enrollYear: number;
-	grade: number;
+	grade: Grade;
 	class: number;
 	remark: string | null;
-	options: Record<string, unknown>;
+	options: Record<string, unknown> | null;
 	createTime: number;
 	updateTime: number;
 	deleteTime: number;

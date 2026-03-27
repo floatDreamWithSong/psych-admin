@@ -17,6 +17,13 @@ export const Gender = {
 } as const;
 export type Gender = (typeof Gender)[keyof typeof Gender];
 
+export const GenderLabel = {
+	[Gender.MALE]: "男",
+	[Gender.FEMALE]: "女",
+	[Gender.OTHER]: "其他",
+} as const;
+export type GenderLabel = (typeof GenderLabel)[keyof typeof GenderLabel];
+
 export const Status = {
 	ACTIVE: 1,
 	DELETED: 2,
@@ -98,3 +105,9 @@ export const ProcessStatus = {
 	PENDING: 2,
 } as const;
 export type ProcessStatus = (typeof ProcessStatus)[keyof typeof ProcessStatus];
+
+export const GradeLabel = ["全部", "一年级", "二年级", "三年级"] as const;
+export type GradeLabel = (typeof GradeLabel)[number];
+
+export const Grade = [0, 1, 2, 3] as const;
+export type Grade = (typeof Grade)[number];

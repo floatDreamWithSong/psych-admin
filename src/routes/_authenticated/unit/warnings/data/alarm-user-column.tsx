@@ -111,7 +111,7 @@ export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
 			<>
 				<Button variant={"link"} className="text-destructive" asChild>
 					<Link
-						to="/unit/warnings/$id"
+						to="/unit/users/$id"
 						params={{ id: row.original.id }}
 						className="cursor-pointer border-none bg-transparent text-sm text-gradient-2 hover:underline"
 					>

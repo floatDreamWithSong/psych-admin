@@ -2,8 +2,9 @@ import { request } from "@/lib/request";
 import type {
 	BasicPagination,
 	BasicPaginationOption,
-	User,
+	UserInfo,
 } from "../common/type";
+import type { Grade } from "../common/constant";
 
 interface ClassItem {
 	alarmNum: number;
@@ -17,7 +18,7 @@ export const getClassList = (data: { unitId: string }) =>
 	request<{
 		grades: {
 			classes: ClassItem[];
-			grade: number;
+			grade: Grade;
 		}[];
 	}>({
 		url: "/dashboard/classes",
@@ -27,6 +28,11 @@ export const getClassList = (data: { unitId: string }) =>
 
 export const getUserList = (data: {
 	unitId: string;
+	grade?: number;
+	class?: number;
+	level?: number;
+	gender?: number;
+	keyword?: string;
 	paginationOptions: BasicPaginationOption;
 }) =>
 	request<{
@@ -36,7 +42,7 @@ export const getUserList = (data: {
 			lastConversationTime: number;
 			level: number;
 			totalConversationRounds: number;
-			user: Pick<User, "name" | "gender" | "class" | "code">;
+			user: UserInfo;
 		}[];
 	}>({
 		url: "/dashboard/users",

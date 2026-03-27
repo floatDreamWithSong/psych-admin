@@ -1,8 +1,12 @@
 import { request } from "@/lib/request";
-import type { BasicPagination, BasicPaginationOption } from "../common/type";
+import type {
+	BasicPagination,
+	BasicPaginationOption,
+	UserInfo,
+} from "../common/type";
 
 export interface TrendPoint {
-	date: string;
+	week: number;
 	count: number;
 }
 
@@ -13,7 +17,10 @@ export interface Keyword {
 export interface ConvDetail {
 	time: number;
 	digest: string;
-	keywords: Keyword[];
+	keywords: {
+		keywordMap: Record<string, number>;
+		keyTotal: number;
+	};
 }
 
 export const getUserConversationList = (data: {
@@ -21,13 +28,7 @@ export const getUserConversationList = (data: {
 	paginationOptions: BasicPaginationOption;
 }) =>
 	request<{
-		user: {
-			userId: string;
-			userName: string;
-			avatar: string;
-			grade: string;
-			school: string;
-		};
+		user: UserInfo;
 		userConvTrend: {
 			trendPoints: TrendPoint[];
 		};

@@ -1,7 +1,7 @@
 import UserRecords from "@/components/features/user-records";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authenticated/unit/warnings/$id")({
+export const Route = createFileRoute("/_authenticated/unit/users/$id")({
 	component: RouteComponent,
 });
 
