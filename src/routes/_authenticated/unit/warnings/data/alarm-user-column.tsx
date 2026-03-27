@@ -107,11 +107,12 @@ export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
 	{
 		accessorKey: "actions",
 		header: "操作",
-		cell: () => (
+		cell: ({ row }) => (
 			<>
 				<Button variant={"link"} className="text-destructive" asChild>
 					<Link
-						to="/unit/records"
+						to="/unit/warnings/$id"
+						params={{ id: row.original.id }}
 						className="cursor-pointer border-none bg-transparent text-sm text-gradient-2 hover:underline"
 					>
 						<EyeIcon />

@@ -31,7 +31,7 @@ export const getUserConversationList = (data: {
 		userConvTrend: {
 			trendPoints: TrendPoint[];
 		};
-		convDetail: ConvDetail;
+		convDetail: ConvDetail[];
 		pagination: BasicPagination;
 	}>({
 		url: "/dashboard/user_conversation_records",

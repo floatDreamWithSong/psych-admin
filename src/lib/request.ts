@@ -1,10 +1,10 @@
-import type {
+import {
 	AxiosError,
-	AxiosInstance,
-	AxiosRequestConfig,
-	AxiosResponse,
-	CreateAxiosDefaults,
-	InternalAxiosRequestConfig,
+	type AxiosInstance,
+	type AxiosRequestConfig,
+	type AxiosResponse,
+	type CreateAxiosDefaults,
+	type InternalAxiosRequestConfig,
 } from "axios";
 import axios from "axios";
 import type z from "zod";
@@ -42,7 +42,7 @@ interface AxiosClientOptions {
 	onResponse?: (
 		response: AxiosResponse<ApiResponse>,
 	) => AxiosResponse<ApiResponse>;
-	onError?: (error: AxiosError) => AxiosError;
+	onError?: (error: AxiosError) => unknown;
 }
 
 export let axiosClientRef: AxiosInstance | undefined = void 0;
@@ -90,7 +90,9 @@ export function createAxiosInstance(
 			// 检查业务状态码
 			if (payload.code !== 0) {
 				const errmsg = payload.msg || "请求失败";
-				throw new Error(errmsg);
+				const newError = new AxiosError(errmsg, response.status.toString());
+				onError?.(newError);
+				throw newError;
 			}
 			onResponse?.(response);
 			return response;

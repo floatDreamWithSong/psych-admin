@@ -15,6 +15,7 @@ const DepartmentTable = ({
 	}) => {
 		const { units } = await getUnitList();
 		const data = units.map<PanelData>((unit) => ({
+			id: unit.id,
 			departmentType: unit.type,
 			departmentName: unit.name,
 			departmentLabel: unit.property,

@@ -81,6 +81,7 @@ export const getDataTrend = (data: Partial<DashboardRequest>) =>
 	});
 
 export interface DashboardUnit {
+	id: string;
 	type: string;
 	name: string;
 	property: string;

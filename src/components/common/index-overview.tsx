@@ -30,7 +30,7 @@ export const IndexOverview = ({
 					{title}
 				</CardHeaderTitle>
 			)}
-			<div className="flex gap-5 flex-wrap">
+			<div className="flex gap-5 flex-nowrap overflow-x-auto">
 				{datas.map(({ icon, percentage, title, value, valueUnit, props }) => {
 					const valueString = formatNumber(value);
 					percentage = formatRate2Percentage(percentage);
@@ -39,7 +39,12 @@ export const IndexOverview = ({
 							? percentage.toFixed(2)
 							: percentage.toFixed(1);
 					return (
-						<CardLayout variant="card" key={title} {...props}>
+						<CardLayout
+							variant="card"
+							className="w-full"
+							key={title}
+							{...props}
+						>
 							<div className="flex-1">
 								<CardHeaderTitle variant="secondary">{title}</CardHeaderTitle>
 								<div>

@@ -1,0 +1,8 @@
+* {
+  scrollbar-color: var(--c-scrollbar) var(--background);
+}
+
+:root {
+  --c-scrollbar: var(--muted);
+  --c-scrollbar-hover: var(--primary);
+}

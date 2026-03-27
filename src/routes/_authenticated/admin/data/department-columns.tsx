@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import dayjs from "dayjs";
 
 export interface PanelData {
+	id: string;
 	departmentType: string;
 	departmentName: string;
 	departmentLabel: string;
@@ -55,7 +56,9 @@ export const departmentColumns: Array<ColumnDef<PanelData>> = [
 		accessorKey: "avgConversationDuration",
 		header: "平均对话时长",
 		cell: ({ row }) => {
-			return <span>{row.original.avgConversationDuration}min</span>;
+			const duration = row.original.avgConversationDuration;
+			const minutes = Math.ceil(duration / 60);
+			return <span>{`${minutes}分钟`}</span>;
 		},
 	},
 	{
@@ -83,12 +86,11 @@ export const departmentColumns: Array<ColumnDef<PanelData>> = [
 	{
 		accessorKey: "actions",
 		header: "操作",
-		// TODO: 等后端修改为动态路由
-		cell: () => {
+		cell: ({ row }) => {
 			return (
 				<Link
-					to="/admin/panel/detail/$id"
-					params={{ id: "691f10a80c8a2207a770ff24" }}
+					to="/admin/panel/$id"
+					params={{ id: row.original.id }}
 					className="cursor-pointer text-gradient-2 hover:underline text-sm bg-transparent border-none"
 				>
 					查看详情

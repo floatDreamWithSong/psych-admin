@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { ChartConfig } from "@/components/ui/chart";
 import PanelCharts from "@/components/common/charts";
-import AdminPanelLayout from "../../layouts/admin-panel-layout";
+import AdminPanelLayout from "@admin/layouts/admin-panel-layout";
 import { useQuery } from "@tanstack/react-query";
 import { getDataTrend, getPsychTrend } from "@/apis/dashboard/dashboard";
 import { formatWeek } from "@/lib/format";
 import { Emotion, RiskGender, RiskLevel } from "@/apis/common/constant";
 
-export const Route = createFileRoute("/_authenticated/admin/panel/detail/$id")({
+export const Route = createFileRoute("/_authenticated/admin/panel/$id")({
 	component: RouteComponent,
 });
 

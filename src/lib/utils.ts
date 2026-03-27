@@ -2,6 +2,7 @@ import { env } from "@/env";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { createAxiosInstance } from "./request";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -28,4 +29,7 @@ export const axiosClient = createAxiosInstance({
 	},
 	onTokenGet: tokenStore.get,
 	onTokenRemove: tokenStore.remove,
+	onError: (error) => {
+		toast.error(error.message);
+	},
 });

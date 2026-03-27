@@ -26,7 +26,8 @@ import { Route as AuthenticatedUnitSettingsIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedUnitRecordsIndexRouteImport } from './routes/_authenticated/unit/records/index'
 import { Route as AuthenticatedUnitPanelIndexRouteImport } from './routes/_authenticated/unit/panel/index'
 import { Route as AuthenticatedAdminPanelIndexRouteImport } from './routes/_authenticated/admin/panel/index'
-import { Route as AuthenticatedAdminPanelDetailIdRouteImport } from './routes/_authenticated/admin/panel/detail/$id'
+import { Route as AuthenticatedUnitWarningsIdRouteImport } from './routes/_authenticated/unit/warnings/$id'
+import { Route as AuthenticatedAdminPanelIdRouteImport } from './routes/_authenticated/admin/panel/$id'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -117,10 +118,16 @@ const AuthenticatedAdminPanelIndexRoute =
     path: '/panel/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminPanelDetailIdRoute =
-  AuthenticatedAdminPanelDetailIdRouteImport.update({
-    id: '/panel/detail/$id',
-    path: '/panel/detail/$id',
+const AuthenticatedUnitWarningsIdRoute =
+  AuthenticatedUnitWarningsIdRouteImport.update({
+    id: '/warnings/$id',
+    path: '/warnings/$id',
+    getParentRoute: () => AuthenticatedUnitRouteRoute,
+  } as any)
+const AuthenticatedAdminPanelIdRoute =
+  AuthenticatedAdminPanelIdRouteImport.update({
+    id: '/panel/$id',
+    path: '/panel/$id',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 
@@ -134,13 +141,14 @@ export interface FileRoutesByFullPath {
   '/500': typeof Errors500Route
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/unit/': typeof AuthenticatedUnitIndexRoute
+  '/admin/panel/$id': typeof AuthenticatedAdminPanelIdRoute
+  '/unit/warnings/$id': typeof AuthenticatedUnitWarningsIdRoute
   '/admin/panel/': typeof AuthenticatedAdminPanelIndexRoute
   '/unit/panel/': typeof AuthenticatedUnitPanelIndexRoute
   '/unit/records/': typeof AuthenticatedUnitRecordsIndexRoute
   '/unit/settings/': typeof AuthenticatedUnitSettingsIndexRoute
   '/unit/users/': typeof AuthenticatedUnitUsersIndexRoute
   '/unit/warnings/': typeof AuthenticatedUnitWarningsIndexRoute
-  '/admin/panel/detail/$id': typeof AuthenticatedAdminPanelDetailIdRoute
 }
 export interface FileRoutesByTo {
   '/sign-in': typeof authSignInRoute
@@ -150,13 +158,14 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/unit': typeof AuthenticatedUnitIndexRoute
+  '/admin/panel/$id': typeof AuthenticatedAdminPanelIdRoute
+  '/unit/warnings/$id': typeof AuthenticatedUnitWarningsIdRoute
   '/admin/panel': typeof AuthenticatedAdminPanelIndexRoute
   '/unit/panel': typeof AuthenticatedUnitPanelIndexRoute
   '/unit/records': typeof AuthenticatedUnitRecordsIndexRoute
   '/unit/settings': typeof AuthenticatedUnitSettingsIndexRoute
   '/unit/users': typeof AuthenticatedUnitUsersIndexRoute
   '/unit/warnings': typeof AuthenticatedUnitWarningsIndexRoute
-  '/admin/panel/detail/$id': typeof AuthenticatedAdminPanelDetailIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -171,13 +180,14 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/unit/': typeof AuthenticatedUnitIndexRoute
+  '/_authenticated/admin/panel/$id': typeof AuthenticatedAdminPanelIdRoute
+  '/_authenticated/unit/warnings/$id': typeof AuthenticatedUnitWarningsIdRoute
   '/_authenticated/admin/panel/': typeof AuthenticatedAdminPanelIndexRoute
   '/_authenticated/unit/panel/': typeof AuthenticatedUnitPanelIndexRoute
   '/_authenticated/unit/records/': typeof AuthenticatedUnitRecordsIndexRoute
   '/_authenticated/unit/settings/': typeof AuthenticatedUnitSettingsIndexRoute
   '/_authenticated/unit/users/': typeof AuthenticatedUnitUsersIndexRoute
   '/_authenticated/unit/warnings/': typeof AuthenticatedUnitWarningsIndexRoute
-  '/_authenticated/admin/panel/detail/$id': typeof AuthenticatedAdminPanelDetailIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -191,13 +201,14 @@ export interface FileRouteTypes {
     | '/500'
     | '/admin/'
     | '/unit/'
+    | '/admin/panel/$id'
+    | '/unit/warnings/$id'
     | '/admin/panel/'
     | '/unit/panel/'
     | '/unit/records/'
     | '/unit/settings/'
     | '/unit/users/'
     | '/unit/warnings/'
-    | '/admin/panel/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/sign-in'
@@ -207,13 +218,14 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/unit'
+    | '/admin/panel/$id'
+    | '/unit/warnings/$id'
     | '/admin/panel'
     | '/unit/panel'
     | '/unit/records'
     | '/unit/settings'
     | '/unit/users'
     | '/unit/warnings'
-    | '/admin/panel/detail/$id'
   id:
     | '__root__'
     | '/(auth)'
@@ -227,13 +239,14 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/admin/'
     | '/_authenticated/unit/'
+    | '/_authenticated/admin/panel/$id'
+    | '/_authenticated/unit/warnings/$id'
     | '/_authenticated/admin/panel/'
     | '/_authenticated/unit/panel/'
     | '/_authenticated/unit/records/'
     | '/_authenticated/unit/settings/'
     | '/_authenticated/unit/users/'
     | '/_authenticated/unit/warnings/'
-    | '/_authenticated/admin/panel/detail/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -365,11 +378,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPanelIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/panel/detail/$id': {
-      id: '/_authenticated/admin/panel/detail/$id'
-      path: '/panel/detail/$id'
-      fullPath: '/admin/panel/detail/$id'
-      preLoaderRoute: typeof AuthenticatedAdminPanelDetailIdRouteImport
+    '/_authenticated/unit/warnings/$id': {
+      id: '/_authenticated/unit/warnings/$id'
+      path: '/warnings/$id'
+      fullPath: '/unit/warnings/$id'
+      preLoaderRoute: typeof AuthenticatedUnitWarningsIdRouteImport
+      parentRoute: typeof AuthenticatedUnitRouteRoute
+    }
+    '/_authenticated/admin/panel/$id': {
+      id: '/_authenticated/admin/panel/$id'
+      path: '/panel/$id'
+      fullPath: '/admin/panel/$id'
+      preLoaderRoute: typeof AuthenticatedAdminPanelIdRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
   }
@@ -389,15 +409,15 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminPanelIdRoute: typeof AuthenticatedAdminPanelIdRoute
   AuthenticatedAdminPanelIndexRoute: typeof AuthenticatedAdminPanelIndexRoute
-  AuthenticatedAdminPanelDetailIdRoute: typeof AuthenticatedAdminPanelDetailIdRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+    AuthenticatedAdminPanelIdRoute: AuthenticatedAdminPanelIdRoute,
     AuthenticatedAdminPanelIndexRoute: AuthenticatedAdminPanelIndexRoute,
-    AuthenticatedAdminPanelDetailIdRoute: AuthenticatedAdminPanelDetailIdRoute,
   }
 
 const AuthenticatedAdminRouteRouteWithChildren =
@@ -407,6 +427,7 @@ const AuthenticatedAdminRouteRouteWithChildren =
 
 interface AuthenticatedUnitRouteRouteChildren {
   AuthenticatedUnitIndexRoute: typeof AuthenticatedUnitIndexRoute
+  AuthenticatedUnitWarningsIdRoute: typeof AuthenticatedUnitWarningsIdRoute
   AuthenticatedUnitPanelIndexRoute: typeof AuthenticatedUnitPanelIndexRoute
   AuthenticatedUnitRecordsIndexRoute: typeof AuthenticatedUnitRecordsIndexRoute
   AuthenticatedUnitSettingsIndexRoute: typeof AuthenticatedUnitSettingsIndexRoute
@@ -417,6 +438,7 @@ interface AuthenticatedUnitRouteRouteChildren {
 const AuthenticatedUnitRouteRouteChildren: AuthenticatedUnitRouteRouteChildren =
   {
     AuthenticatedUnitIndexRoute: AuthenticatedUnitIndexRoute,
+    AuthenticatedUnitWarningsIdRoute: AuthenticatedUnitWarningsIdRoute,
     AuthenticatedUnitPanelIndexRoute: AuthenticatedUnitPanelIndexRoute,
     AuthenticatedUnitRecordsIndexRoute: AuthenticatedUnitRecordsIndexRoute,
     AuthenticatedUnitSettingsIndexRoute: AuthenticatedUnitSettingsIndexRoute,

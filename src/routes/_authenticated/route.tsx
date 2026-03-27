@@ -15,6 +15,7 @@ import Footer from "@layouts/footer";
 import { userStore } from "@/store/user";
 import { Role } from "@/apis/common/constant";
 import { tokenStore } from "@/lib/utils";
+import GoBack from "@/components/common/go-back";
 
 export const Route = createFileRoute("/_authenticated")({
 	beforeLoad: () => {

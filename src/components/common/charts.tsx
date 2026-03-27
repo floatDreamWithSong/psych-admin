@@ -408,9 +408,10 @@ function WordCloud(props: WordCloudProps & ChartProps) {
 	const maxW = Math.max(...weights);
 
 	const fontScale = scaleLinear().domain([minW, maxW]).range(fontRange);
-	const colorScale = (value: number): string => {
+	const createColorScale = (target: HTMLElement) => {
+		const styles = getComputedStyle(target);
 		const getCSSVariable = (varName: string) =>
-			getComputedStyle(document.documentElement).getPropertyValue(varName);
+			styles.getPropertyValue(varName).trim();
 
 		// 将十六进制颜色转换为 RGB
 		const hexToRgb = (hex: string): [number, number, number] => {
@@ -427,11 +428,14 @@ function WordCloud(props: WordCloudProps & ChartProps) {
 		const color2 = getCSSVariable("--gradient-1");
 		const rgb1 = hexToRgb(color1);
 		const rgb2 = hexToRgb(color2);
-		const t = (value - minW) / (maxW - minW);
-		const r = Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * t);
-		const g = Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * t);
-		const b = Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * t);
-		return `rgb(${r}, ${g}, ${b})`;
+
+		return (value: number): string => {
+			const t = maxW === minW ? 0.5 : (value - minW) / (maxW - minW);
+			const r = Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * t);
+			const g = Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * t);
+			const b = Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * t);
+			return `rgb(${r}, ${g}, ${b})`;
+		};
 	};
 
 	useEffect(() => {
@@ -440,6 +444,7 @@ function WordCloud(props: WordCloudProps & ChartProps) {
 
 		const runLayout = (width: number, height: number) => {
 			if (width === 0 || height === 0 || datas.length === 0) return;
+			const colorScale = createColorScale(el);
 
 			const words: LayoutWord[] = datas.map((d) => ({
 				text: d.text,
@@ -459,14 +464,35 @@ function WordCloud(props: WordCloudProps & ChartProps) {
 				.on("end", (tags) => setLayoutWords(tags))
 				.start();
 		};
+		const rerenderLayout = () => runLayout(el.clientWidth, el.clientHeight);
 		const observer = new ResizeObserver((entries) => {
 			const { width, height } = entries[0].contentRect;
 			setSize([width, height]);
 			runLayout(width, height);
 		});
+
+		const mutationObserver = new MutationObserver(() => {
+			rerenderLayout();
+		});
+
+		for (
+			let current: HTMLElement | null = el;
+			current;
+			current = current.parentElement
+		) {
+			mutationObserver.observe(current, {
+				attributes: true,
+				attributeFilter: ["data-theme", "class", "style"],
+			});
+		}
+
 		observer.observe(el);
-		return () => observer.disconnect();
-	}, [theme]);
+		rerenderLayout();
+		return () => {
+			observer.disconnect();
+			mutationObserver.disconnect();
+		};
+	}, [datas, fontRange, theme]);
 
 	return (
 		<CardLayout
