@@ -59,3 +59,35 @@ export const AlarmStudentStatus = {
 	PENDING: 1,
 	PROCESSED: 2,
 };
+
+// 单日内时长的分布 0-5，6-10，11-20，21-30，31-60，61-120, 120以上
+export const ConversationDuration = {
+	LT5: 1,
+	LT10: 2,
+	LT20: 3,
+	LT30: 4,
+	LT60: 5,
+	LT120: 6,
+	GT120: 7,
+} as const;
+export type ConversationDuration =
+	(typeof ConversationDuration)[keyof typeof ConversationDuration];
+
+export const getConversationDurationLabel = (key: ConversationDuration) => {
+	switch (key) {
+		case ConversationDuration.LT5:
+			return "0-5";
+		case ConversationDuration.LT10:
+			return "6-10";
+		case ConversationDuration.LT20:
+			return "11-20";
+		case ConversationDuration.LT30:
+			return "21-30";
+		case ConversationDuration.LT60:
+			return "31-60";
+		case ConversationDuration.LT120:
+			return "61-120";
+		case ConversationDuration.GT120:
+			return "120+";
+	}
+};

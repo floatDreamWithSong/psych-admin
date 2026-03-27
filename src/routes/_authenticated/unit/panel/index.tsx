@@ -23,7 +23,12 @@ import {
 	getPsychTrend,
 } from "@/apis/dashboard/dashboard";
 import { formatWeek } from "@/lib/format";
-import { Emotion, RiskGender, RiskLevel } from "@/apis/common/constant";
+import {
+	Emotion,
+	getConversationDurationLabel,
+	RiskGender,
+	RiskLevel,
+} from "@/apis/common/constant";
 
 export const Route = createFileRoute("/_authenticated/unit/panel/")({
 	component: RouteComponent,
@@ -121,14 +126,25 @@ function RouteComponent() {
 		return acc;
 	}, {});
 
-	const appDeviceData = [
-		{ name: "小程序端", value: 8, fill: "var(--pie-1)" },
-		{ name: "APP端", value: 6.7, fill: "var(--pie-2)" },
-		{ name: "实体端", value: 55, fill: "var(--pie-3)" },
-		{ name: "Web端", value: 30.3, fill: "var(--pie-4)" },
+	const gradeData = [
+		{
+			name: "一年级",
+			value: dataTrend?.convDistribution.ratio["1"] || 0,
+			fill: "var(--pie-1)",
+		},
+		{
+			name: "二年级",
+			value: dataTrend?.convDistribution.ratio["2"] || 0,
+			fill: "var(--pie-2)",
+		},
+		{
+			name: "三年级",
+			value: dataTrend?.convDistribution.ratio["3"] || 0,
+			fill: "var(--pie-3)",
+		},
 	];
 
-	const appDeviceConfig = appDeviceData.reduce((acc: ChartConfig, item) => {
+	const gradeConfig = gradeData.reduce((acc: ChartConfig, item) => {
 		acc[item.name] = { label: item.name, color: item.fill };
 		return acc;
 	}, {});
@@ -212,11 +228,12 @@ function RouteComponent() {
 								label: "对话次数",
 							},
 						}}
-						yAxisUnit="min"
+						yAxisUnit="人"
+						xAxisUnit="min"
 						xAxisPosition="bottom"
 						datas={
 							dataTrend?.conversationDurations.map((item) => ({
-								date: item.minutes,
+								date: getConversationDurationLabel(item.key),
 								value: item.count,
 							})) || []
 						}
@@ -224,9 +241,9 @@ function RouteComponent() {
 					{/* TODO: 后端暂未实现该功能，先留着不动 */}
 					<PanelCharts.CommonPieChart
 						className="h-73.75 grow-4"
-						title="使用平台设备类型占比"
-						datas={appDeviceData}
-						config={appDeviceConfig}
+						title="各年级预警人数占比"
+						datas={gradeData}
+						config={gradeConfig}
 					/>
 				</div>
 			</CardLayout>

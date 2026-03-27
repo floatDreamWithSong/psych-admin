@@ -37,6 +37,7 @@ type ActivityChartProps = {
 	borderStyle?: "squre-border" | "none";
 	drawYAxis?: boolean;
 	yAxisUnit?: string;
+	xAxisUnit?: string;
 	xAxisPosition?: "top" | "bottom";
 	drawCartesianGrid?: "horizontal" | "vertical" | "both" | "none";
 } & (
@@ -50,7 +51,7 @@ type ActivityChartProps = {
 	  }
 	| {
 			datas: {
-				date: number;
+				date: number | string;
 				value: number;
 			}[];
 			type: "column";
@@ -68,6 +69,7 @@ function ActivityChart(props: ActivityChartProps & ChartProps) {
 		borderStyle = "squre-border",
 		drawYAxis = false,
 		yAxisUnit,
+		xAxisUnit,
 		xAxisPosition = "top",
 		drawCartesianGrid = "vertical",
 		...rest
@@ -196,6 +198,7 @@ function ActivityChart(props: ActivityChartProps & ChartProps) {
 							axisLine={false}
 							tickLine={false}
 							tick={{ fontSize: 12, fill: "#999" }}
+							unit={xAxisUnit}
 						/>
 						<YAxis
 							axisLine={false}

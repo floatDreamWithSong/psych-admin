@@ -1,5 +1,10 @@
 import { request } from "@/lib/request";
-import type { Emotion, RiskGender, RiskLevel } from "../common/constant";
+import type {
+	ConversationDuration,
+	Emotion,
+	RiskGender,
+	RiskLevel,
+} from "../common/constant";
 
 interface DashboardRequest {
 	unitId: string;
@@ -65,8 +70,13 @@ export interface Point {
 }
 
 export interface Duration {
-	minutes: number;
+	key: ConversationDuration;
 	count: number;
+}
+
+export interface ConvDistribution {
+	ratio: Record<"1" | "2" | "3", number>;
+	total: number;
 }
 
 export const getDataTrend = (data: Partial<DashboardRequest>) =>
@@ -74,6 +84,7 @@ export const getDataTrend = (data: Partial<DashboardRequest>) =>
 		activePoints: Point[];
 		conversationDurations: Duration[];
 		conversationPoints: Point[];
+		convDistribution: ConvDistribution;
 	}>({
 		url: "/dashboard/trend",
 		method: "POST",
