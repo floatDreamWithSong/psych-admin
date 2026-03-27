@@ -17,6 +17,11 @@ export type BasicPagination =
 			limit: number;
 	  };
 
+export interface UserRemark {
+	time: number; // Unix 时间戳（秒）
+	content: string;
+}
+
 export interface UserInfo {
 	id: string;
 	codeType: UserCodeType;
@@ -29,7 +34,7 @@ export interface UserInfo {
 	enrollYear: number;
 	grade: Grade;
 	class: number;
-	remark: string | null;
+	remark: UserRemark | null;
 	options: Record<string, unknown> | null;
 	createTime: number;
 	updateTime: number;

@@ -1,10 +1,12 @@
 // import { AlarmStudentStatus } from "@/apis/common/constant";
+import type { UserRemark } from "@/apis/common/type";
+import { StudentRemarkAction } from "@/components/features/user-remark-dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { EyeIcon, PencilLine } from "lucide-react";
+import { EyeIcon } from "lucide-react";
 
 export interface AlarmUserRow {
 	id: string;
@@ -15,6 +17,7 @@ export interface AlarmUserRow {
 	keywords: string[];
 	totalConversationRounds: number;
 	lastConversationTime: number;
+	remark?: UserRemark | null;
 	// TODO: 等后端给出枚举值
 	status: string;
 }
@@ -119,10 +122,11 @@ export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
 						查看详情
 					</Link>
 				</Button>
-				<Button variant={"link"} className="text-black">
-					<PencilLine />
-					添加备注
-				</Button>
+				<StudentRemarkAction
+					data-theme="danger"
+					userId={row.original.id}
+					remark={row.original.remark}
+				/>
 			</>
 		),
 	},

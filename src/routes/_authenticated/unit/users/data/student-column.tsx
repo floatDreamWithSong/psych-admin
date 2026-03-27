@@ -1,10 +1,12 @@
 import { Gender, GenderLabel, RiskLevel } from "@/apis/common/constant";
+import type { UserRemark } from "@/apis/common/type";
+import { StudentRemarkAction } from "@/components/features/user-remark-dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { EyeIcon, PencilLineIcon } from "lucide-react";
+import { EyeIcon } from "lucide-react";
 
 export type StudentUserRow = {
 	id: string;
@@ -16,6 +18,7 @@ export type StudentUserRow = {
 	keywords: string[];
 	totalConversationRounds: number;
 	lastConversationTime: number;
+	remark?: UserRemark | null;
 };
 
 const riskLevelLabelMap = new Map<number, string>([
@@ -112,10 +115,10 @@ export const StudentColumns: Array<ColumnDef<StudentUserRow>> = [
 						查看详情
 					</Link>
 				</Button>
-				<Button variant="ghost">
-					<PencilLineIcon className="size-3.5" />
-					添加备注
-				</Button>
+				<StudentRemarkAction
+					userId={row.original.id}
+					remark={row.original.remark}
+				/>
 			</>
 		),
 	},

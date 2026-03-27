@@ -81,6 +81,7 @@ function RouteComponent() {
 				keywords: item.keywords,
 				totalConversationRounds: item.totalConversationRounds,
 				lastConversationTime: item.lastConversationTime,
+				remark: item.user.remark,
 			})),
 			total: "total" in pagination ? pagination.total : riskUsers.length,
 		};

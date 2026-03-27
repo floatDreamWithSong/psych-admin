@@ -59,6 +59,7 @@ const AlarmUserTable = () => {
 				keywords: record.keywords,
 				totalConversationRounds: record.totalConversationRounds,
 				lastConversationTime: record.lastConversationTime,
+				remark: record.user.remark,
 				status: record.status,
 			})),
 			total: "total" in pagination ? pagination.total : records.length,
