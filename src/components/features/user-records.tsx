@@ -78,8 +78,7 @@ export default function UserRecords({
 		queryKey: ["user-records", userId],
 		queryFn: async () => {
 			const data = await getUserConversationList({
-				// TODO: 等后端修复后更换为动态id
-				userId: "69bfb8c0f80ebaf6192169f8",
+				userId,
 				paginationOptions: {
 					page: 1,
 					limit: 1,
