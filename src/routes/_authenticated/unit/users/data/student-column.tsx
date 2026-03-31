@@ -1,6 +1,6 @@
 import { Gender, GenderLabel, RiskLevel } from "@/apis/common/constant";
 import type { UserRemark } from "@/apis/common/type";
-import { StudentRemarkAction } from "@/components/features/user-remark-dialog";
+import { UserRemarkDialog } from "@/components/features/user-remark-dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
@@ -115,9 +115,9 @@ export const StudentColumns: Array<ColumnDef<StudentUserRow>> = [
 						查看详情
 					</Link>
 				</Button>
-				<StudentRemarkAction
+				<UserRemarkDialog
 					userId={row.original.id}
-					remark={row.original.remark}
+					initialRemark={row.original.remark}
 				/>
 			</>
 		),

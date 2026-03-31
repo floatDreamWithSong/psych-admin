@@ -1,6 +1,6 @@
-// import { AlarmStudentStatus } from "@/apis/common/constant";
+import { ProcessStatus, ProcessStatusLabel } from "@/apis/common/constant";
 import type { UserRemark } from "@/apis/common/type";
-import { StudentRemarkAction } from "@/components/features/user-remark-dialog";
+import { UserRemarkDialog } from "@/components/features/user-remark-dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
@@ -18,8 +18,7 @@ export interface AlarmUserRow {
 	totalConversationRounds: number;
 	lastConversationTime: number;
 	remark?: UserRemark | null;
-	// TODO: 等后端给出枚举值
-	status: string;
+	status: ProcessStatus;
 }
 
 const emotionLabelMap = new Map<string, string>([
@@ -27,12 +26,6 @@ const emotionLabelMap = new Map<string, string>([
 	["2", "负面"],
 	["3", "中性"],
 	["4", "正向"],
-]);
-
-const statusLabelMap = new Map<string, string>([
-	["pending", "待处理"],
-	["processed", "已处理"],
-	["track", "需追踪"],
 ]);
 
 export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
@@ -100,9 +93,8 @@ export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
 		cell: ({ row }) => {
 			const status = row.original.status;
 			return (
-				// TODO: 等后端给出枚举值后动态设置文字颜色
 				<span className={cn("font-medium", "text-destructive")}>
-					{statusLabelMap.get(status) || status}
+					{ProcessStatusLabel[status] || status}
 				</span>
 			);
 		},
@@ -122,10 +114,10 @@ export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
 						查看详情
 					</Link>
 				</Button>
-				<StudentRemarkAction
+				<UserRemarkDialog
 					data-theme="danger"
 					userId={row.original.id}
-					remark={row.original.remark}
+					initialRemark={row.original.remark}
 				/>
 			</>
 		),

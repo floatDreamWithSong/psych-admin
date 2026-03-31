@@ -3,7 +3,7 @@ import type {
 	BasicPagination,
 	BasicPaginationOption,
 	User,
-	UserInfo,
+	// UserInfo,
 } from "../common/type";
 import type { Emotion, ProcessStatus } from "../common/constant";
 
@@ -38,7 +38,7 @@ export interface CoreapiAlarmRecord {
 	/**
 	 * 处理状态
 	 */
-	status: string;
+	status: ProcessStatus;
 	/**
 	 * 总对话轮数
 	 */
@@ -78,11 +78,13 @@ export const updateAlarm = (data: {
 	id: string;
 	// emotion?: Emotion;
 	// kewords?: string[];
-	// status?: ProcessStatus;
-	user?: Pick<UserInfo, "remark">;
+	status?: ProcessStatus;
+	// user?: Pick<UserInfo, "remark">;
 }) =>
 	request({
 		url: "/dashboard/update_alarm",
 		method: "POST",
-		data,
+		data: {
+			alarm: data,
+		},
 	});

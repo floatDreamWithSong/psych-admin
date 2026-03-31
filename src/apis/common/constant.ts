@@ -106,6 +106,13 @@ export const ProcessStatus = {
 } as const;
 export type ProcessStatus = (typeof ProcessStatus)[keyof typeof ProcessStatus];
 
+export const ProcessStatusLabel = {
+	[ProcessStatus.PROCESSED]: "已处理",
+	[ProcessStatus.PENDING]: "待处理",
+} as const;
+export type ProcessStatusLabel =
+	(typeof ProcessStatusLabel)[keyof typeof ProcessStatusLabel];
+
 export const GradeLabel = ["全部", "一年级", "二年级", "三年级"] as const;
 export type GradeLabel = (typeof GradeLabel)[number];
 

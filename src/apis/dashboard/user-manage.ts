@@ -49,3 +49,14 @@ export const getUserList = (data: {
 		method: "POST",
 		data,
 	});
+
+export const createRemark = (data: {
+	userId: string;
+	unitId: string;
+	remark: string;
+}) =>
+	request({
+		url: "/dashboard/create_remark",
+		method: "POST",
+		data,
+	});
