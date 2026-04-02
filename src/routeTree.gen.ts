@@ -28,6 +28,7 @@ import { Route as AuthenticatedUnitPanelIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminPanelIndexRouteImport } from './routes/_authenticated/admin/panel/index'
 import { Route as AuthenticatedUnitUsersStudentsRouteImport } from './routes/_authenticated/unit/users/students'
 import { Route as AuthenticatedUnitUsersIdRouteImport } from './routes/_authenticated/unit/users/$id'
+import { Route as AuthenticatedUnitRecordsConvIdRouteImport } from './routes/_authenticated/unit/records/$convId'
 import { Route as AuthenticatedAdminPanelIdRouteImport } from './routes/_authenticated/admin/panel/$id'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -131,6 +132,12 @@ const AuthenticatedUnitUsersIdRoute =
     path: '/users/$id',
     getParentRoute: () => AuthenticatedUnitRouteRoute,
   } as any)
+const AuthenticatedUnitRecordsConvIdRoute =
+  AuthenticatedUnitRecordsConvIdRouteImport.update({
+    id: '/records/$convId',
+    path: '/records/$convId',
+    getParentRoute: () => AuthenticatedUnitRouteRoute,
+  } as any)
 const AuthenticatedAdminPanelIdRoute =
   AuthenticatedAdminPanelIdRouteImport.update({
     id: '/panel/$id',
@@ -149,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/unit/': typeof AuthenticatedUnitIndexRoute
   '/admin/panel/$id': typeof AuthenticatedAdminPanelIdRoute
+  '/unit/records/$convId': typeof AuthenticatedUnitRecordsConvIdRoute
   '/unit/users/$id': typeof AuthenticatedUnitUsersIdRoute
   '/unit/users/students': typeof AuthenticatedUnitUsersStudentsRoute
   '/admin/panel/': typeof AuthenticatedAdminPanelIndexRoute
@@ -167,6 +175,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/unit': typeof AuthenticatedUnitIndexRoute
   '/admin/panel/$id': typeof AuthenticatedAdminPanelIdRoute
+  '/unit/records/$convId': typeof AuthenticatedUnitRecordsConvIdRoute
   '/unit/users/$id': typeof AuthenticatedUnitUsersIdRoute
   '/unit/users/students': typeof AuthenticatedUnitUsersStudentsRoute
   '/admin/panel': typeof AuthenticatedAdminPanelIndexRoute
@@ -190,6 +199,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/unit/': typeof AuthenticatedUnitIndexRoute
   '/_authenticated/admin/panel/$id': typeof AuthenticatedAdminPanelIdRoute
+  '/_authenticated/unit/records/$convId': typeof AuthenticatedUnitRecordsConvIdRoute
   '/_authenticated/unit/users/$id': typeof AuthenticatedUnitUsersIdRoute
   '/_authenticated/unit/users/students': typeof AuthenticatedUnitUsersStudentsRoute
   '/_authenticated/admin/panel/': typeof AuthenticatedAdminPanelIndexRoute
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/unit/'
     | '/admin/panel/$id'
+    | '/unit/records/$convId'
     | '/unit/users/$id'
     | '/unit/users/students'
     | '/admin/panel/'
@@ -230,6 +241,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/unit'
     | '/admin/panel/$id'
+    | '/unit/records/$convId'
     | '/unit/users/$id'
     | '/unit/users/students'
     | '/admin/panel'
@@ -252,6 +264,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/unit/'
     | '/_authenticated/admin/panel/$id'
+    | '/_authenticated/unit/records/$convId'
     | '/_authenticated/unit/users/$id'
     | '/_authenticated/unit/users/students'
     | '/_authenticated/admin/panel/'
@@ -405,6 +418,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUnitUsersIdRouteImport
       parentRoute: typeof AuthenticatedUnitRouteRoute
     }
+    '/_authenticated/unit/records/$convId': {
+      id: '/_authenticated/unit/records/$convId'
+      path: '/records/$convId'
+      fullPath: '/unit/records/$convId'
+      preLoaderRoute: typeof AuthenticatedUnitRecordsConvIdRouteImport
+      parentRoute: typeof AuthenticatedUnitRouteRoute
+    }
     '/_authenticated/admin/panel/$id': {
       id: '/_authenticated/admin/panel/$id'
       path: '/panel/$id'
@@ -447,6 +467,7 @@ const AuthenticatedAdminRouteRouteWithChildren =
 
 interface AuthenticatedUnitRouteRouteChildren {
   AuthenticatedUnitIndexRoute: typeof AuthenticatedUnitIndexRoute
+  AuthenticatedUnitRecordsConvIdRoute: typeof AuthenticatedUnitRecordsConvIdRoute
   AuthenticatedUnitUsersIdRoute: typeof AuthenticatedUnitUsersIdRoute
   AuthenticatedUnitUsersStudentsRoute: typeof AuthenticatedUnitUsersStudentsRoute
   AuthenticatedUnitPanelIndexRoute: typeof AuthenticatedUnitPanelIndexRoute
@@ -459,6 +480,7 @@ interface AuthenticatedUnitRouteRouteChildren {
 const AuthenticatedUnitRouteRouteChildren: AuthenticatedUnitRouteRouteChildren =
   {
     AuthenticatedUnitIndexRoute: AuthenticatedUnitIndexRoute,
+    AuthenticatedUnitRecordsConvIdRoute: AuthenticatedUnitRecordsConvIdRoute,
     AuthenticatedUnitUsersIdRoute: AuthenticatedUnitUsersIdRoute,
     AuthenticatedUnitUsersStudentsRoute: AuthenticatedUnitUsersStudentsRoute,
     AuthenticatedUnitPanelIndexRoute: AuthenticatedUnitPanelIndexRoute,

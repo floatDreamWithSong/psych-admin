@@ -4,6 +4,7 @@ import type {
 	BasicPaginationOption,
 	UserInfo,
 } from "../common/type";
+import type { Emotion } from "../common/constant";
 
 export interface TrendPoint {
 	week: number;
@@ -15,6 +16,7 @@ export interface Keyword {
 	weight: number;
 }
 export interface ConvDetail {
+	conversationId: string;
 	time: number;
 	digest: string;
 	keywords: {
@@ -45,7 +47,7 @@ export const getReport = (data: { conversationId: string }) =>
 		title: string;
 		keywords: string[];
 		digest: string;
-		emotion: string;
+		emotion: Emotion;
 		body: string;
 		needAlarm: boolean;
 	}>({
@@ -54,9 +56,19 @@ export const getReport = (data: { conversationId: string }) =>
 		data,
 	});
 
-// TODO: 等待单位报表接口实现
-export const getUnitConversationList = (data: { unitId: string }) =>
-	request({
+export const getUnitConversationList = (
+	data: { unitId: string } & BasicPaginationOption,
+) =>
+	request<{
+		pagination: BasicPagination;
+		conversationList: Array<{
+			user: UserInfo;
+			convId: string;
+			title: string;
+			time: number;
+			needAlarm: boolean;
+		}>;
+	}>({
 		url: "/dashboard/unit_conversation_records",
 		method: "POST",
 		data,

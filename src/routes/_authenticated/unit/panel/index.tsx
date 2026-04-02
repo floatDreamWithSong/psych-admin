@@ -27,7 +27,7 @@ import {
 	Emotion,
 	getConversationDurationLabel,
 	RiskGender,
-	RiskLevel,
+	RiskLevelLabel,
 } from "@/apis/common/constant";
 
 export const Route = createFileRoute("/_authenticated/unit/panel/")({
@@ -46,13 +46,6 @@ const emotionFill = new Map<string, string>([
 	[Emotion.DEPRESS.toString(), "var(--pie-2)"],
 	[Emotion.NEGATIVE.toString(), "var(--pie-3)"],
 	[Emotion.NORMAL.toString(), "var(--pie-4)"],
-]);
-
-const riskLevelKey = new Map<RiskLevel, string>([
-	[RiskLevel.NORMAL, "正常"],
-	[RiskLevel.LOW, "低"],
-	[RiskLevel.MEDIUM, "中"],
-	[RiskLevel.HIGH, "高"],
 ]);
 
 function RouteComponent() {
@@ -152,7 +145,7 @@ function RouteComponent() {
 	const riskLevelData = Array.from(
 		(dataPsychTrend?.risks || [])
 			.reduce((acc, item) => {
-				const level = riskLevelKey.get(item.level) || String(item.level);
+				const level = RiskLevelLabel[item.level];
 				const current = acc.get(level) || { level, female: 0, male: 0 };
 
 				if (item.gender === RiskGender.ALL) {

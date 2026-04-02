@@ -46,6 +46,16 @@ interface AxiosClientOptions {
 }
 
 export let axiosClientRef: AxiosInstance | undefined = void 0;
+let overrideBaseURL: string | undefined = void 0;
+
+declare global {
+	interface Window {
+		setBase: (url: string) => void;
+	}
+}
+window.setBase = (url: string) => {
+	overrideBaseURL = url;
+};
 
 // 创建axios实例
 export function createAxiosInstance(
@@ -74,6 +84,9 @@ export function createAxiosInstance(
 			if (token) {
 				config.headers.Authorization = token;
 			}
+			if (overrideBaseURL) {
+				config.baseURL = overrideBaseURL;
+			}
 			onRequest?.(config);
 			return config;
 		},
@@ -89,7 +102,10 @@ export function createAxiosInstance(
 			const { data: payload } = response;
 			// 检查业务状态码
 			if (payload.code !== 0) {
-				const errmsg = payload.msg || "请求失败";
+				let errmsg = payload.msg || "请求失败";
+				if (payload.code === 5016) {
+					errmsg = "数据分析报表生成中，暂时无法查看";
+				}
 				const newError = new AxiosError(errmsg, response.status.toString());
 				onError?.(newError);
 				throw newError;

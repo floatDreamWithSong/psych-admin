@@ -4,7 +4,9 @@ import { Link, type LinkProps } from "@tanstack/react-router";
 import type React from "react";
 
 interface LinkItemI {
-	icon: (props: React.ComponentProps<"svg">) => React.JSX.Element;
+	icon: (
+		props: React.ComponentProps<"svg"> & { isActive?: boolean },
+	) => React.JSX.Element;
 	label: string;
 	href: LinkProps["to"];
 }
@@ -36,7 +38,7 @@ const SidebarLink = ({
 					{isActive && (
 						<div className="from-gradient-1 to-gradient-2 bg-linear-to-b w-1 h-full absolute top-0 left-0" />
 					)}
-					<Icon className="size-6" />
+					<Icon isActive={isActive} className="size-6" />
 					{label}
 				</Button>
 			)}

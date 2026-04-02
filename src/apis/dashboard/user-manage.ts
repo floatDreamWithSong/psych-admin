@@ -4,7 +4,7 @@ import type {
 	BasicPaginationOption,
 	UserInfo,
 } from "../common/type";
-import type { Grade } from "../common/constant";
+import type { Grade, RiskLevel } from "../common/constant";
 
 interface ClassItem {
 	alarmNum: number;
@@ -30,7 +30,7 @@ export const getUserList = (data: {
 	unitId: string;
 	grade?: number;
 	class?: number;
-	level?: number;
+	level?: RiskLevel;
 	gender?: number;
 	keyword?: string;
 	paginationOptions: BasicPaginationOption;
@@ -40,7 +40,7 @@ export const getUserList = (data: {
 		riskUsers: {
 			keywords: string[];
 			lastConversationTime: number;
-			level: number;
+			level: RiskLevel;
 			totalConversationRounds: number;
 			user: UserInfo;
 		}[];

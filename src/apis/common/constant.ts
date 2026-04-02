@@ -42,10 +42,41 @@ export type Role = (typeof Role)[keyof typeof Role];
 export const Emotion = {
 	DANGER: 1,
 	DEPRESS: 2,
-	NEGATIVE: 3,
-	NORMAL: 4,
+	ANXIETY: 3,
+	NEGATIVE: 4,
+	NORMAL: 5,
 } as const;
 export type Emotion = (typeof Emotion)[keyof typeof Emotion];
+
+export const EmotionLabel = {
+	[Emotion.DANGER]: "危险",
+	[Emotion.DEPRESS]: "抑郁",
+	[Emotion.ANXIETY]: "焦虑",
+	[Emotion.NEGATIVE]: "消极",
+	[Emotion.NORMAL]: "正常",
+} as const;
+export type EmotionLabel = (typeof EmotionLabel)[keyof typeof EmotionLabel];
+
+export const EmotionLevel = {
+	UNKNOWN: 0,
+	DANGER: 1,
+	DEPRESS: 2,
+	ANXIETY: 3,
+	NEGATIVE: 4,
+	NORMAL: 5,
+} as const;
+export type EmotionLevel = (typeof EmotionLevel)[keyof typeof EmotionLevel];
+
+export const EmotionLevelLabel = {
+	[EmotionLevel.UNKNOWN]: "未知",
+	[EmotionLevel.DANGER]: "危险",
+	[EmotionLevel.DEPRESS]: "抑郁",
+	[EmotionLevel.ANXIETY]: "焦虑",
+	[EmotionLevel.NEGATIVE]: "消极",
+	[EmotionLevel.NORMAL]: "正常",
+} as const;
+export type EmotionLevelLabel =
+	(typeof EmotionLevelLabel)[keyof typeof EmotionLevelLabel];
 
 export const RiskGender = {
 	ALL: 0,
@@ -55,12 +86,21 @@ export const RiskGender = {
 export type RiskGender = (typeof RiskGender)[keyof typeof RiskGender];
 
 export const RiskLevel = {
-	NORMAL: 1,
-	LOW: 2,
-	MEDIUM: 3,
-	HIGH: 4,
+	HIGH: 1,
+	MEDIUM: 2,
+	LOW: 3,
+	NORMAL: 4,
 } as const;
 export type RiskLevel = (typeof RiskLevel)[keyof typeof RiskLevel];
+
+export const RiskLevelLabel = {
+	[RiskLevel.HIGH]: "高风险",
+	[RiskLevel.MEDIUM]: "中风险",
+	[RiskLevel.LOW]: "低风险",
+	[RiskLevel.NORMAL]: "正常",
+} as const;
+export type RiskLevelLabel =
+	(typeof RiskLevelLabel)[keyof typeof RiskLevelLabel];
 
 export const AlarmStudentStatus = {
 	PENDING: 1,
@@ -118,3 +158,11 @@ export type GradeLabel = (typeof GradeLabel)[number];
 
 export const Grade = [0, 1, 2, 3] as const;
 export type Grade = (typeof Grade)[number];
+
+export const MessageRole = {
+	SYSTEM: 1,
+	ASSISTANT: 2,
+	USER: 3,
+	TOOL: 4,
+} as const;
+export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole];

@@ -20,7 +20,7 @@ export function getContext() {
 		defaultOptions: {
 			queries: {
 				placeholderData: keepPreviousData,
-				retry: 1,
+				retry: 0,
 			},
 		},
 	});

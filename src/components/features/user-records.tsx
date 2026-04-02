@@ -2,121 +2,79 @@ import { CardHeaderTitle, CardLayout } from "@layouts/card-layout";
 import { Button } from "@/components/ui/button";
 import PanelCharts from "@/components/common/charts";
 import dayjs from "dayjs";
-import malePng from "@/assets/imgs/male.png";
-import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import {
 	getUserConversationList,
 	type ConvDetail,
 } from "@/apis/dashboard/conversation-record";
-import { GenderLabel, GradeLabel } from "@/apis/common/constant";
 import { formatWeek } from "@/lib/format";
-
-interface InfoItemProps {
-	label: string;
-	value: string | number | undefined;
-	className?: string;
-}
-const InfoItem = ({ label, value = "-", className }: InfoItemProps) => {
-	return (
-		<div>
-			<p className="text-sm leading-7.5 text-[#4F4F4F]">{label}：</p>
-			<p className={cn("text-lg leading-7.5", className)}>{value}</p>
-		</div>
-	);
-};
+import { generateInfoItems } from "@/lib/info-item";
+import InfoItem from "./info-item";
+import { Link } from "@tanstack/react-router";
+import { createContext, memo, useCallback, useContext, useRef } from "react";
+import useObserveReachBottom from "@/hooks/use-observe-reach-bottom";
+import {
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyTitle,
+} from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
+import BigAvatar from "./big-avatar";
 
 interface UserRecordsProps {
 	userId: string;
 }
+
+const userRecordContext = createContext({
+	userId: "",
+});
 
 export default function UserRecords({
 	userId,
 	variant = "layout",
 	...props
 }: React.ComponentProps<typeof CardLayout> & UserRecordsProps) {
-	// const infoItems = [
-	// 	{
-	// 		label: "姓名",
-	// 		value: "张明轩",
-	// 	},
-	// 	{
-	// 		label: "年级",
-	// 		value: "七年级",
-	// 	},
-	// 	{
-	// 		label: "风险等级",
-	// 		value: "高风险",
-	// 		className: "text-destructive font-bold",
-	// 	},
-	// 	{
-	// 		label: "性别",
-	// 		value: "男",
-	// 	},
-	// 	{
-	// 		label: "班级",
-	// 		value: "一班",
-	// 	},
-	// 	{
-	// 		label: "对话总轮数",
-	// 		value: "25",
-	// 	},
-	// 	{
-	// 		label: "年龄",
-	// 		value: "14岁",
-	// 	},
-	// 	{
-	// 		label: "学号",
-	// 		value: "2023032101",
-	// 	},
-	// 	{
-	// 		label: "上次对话时间",
-	// 		value: "2025.10.30 18:45",
-	// 	},
-	// ];
-	const { data } = useQuery({
-		queryKey: ["user-records", userId],
-		queryFn: async () => {
-			const data = await getUserConversationList({
-				userId,
-				paginationOptions: {
-					page: 1,
-					limit: 1,
-				},
-			});
-			return data;
-		},
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
+	const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
+		useInfiniteQuery({
+			queryKey: ["user-records-infinite", userId],
+			initialPageParam: 1,
+			queryFn: async ({ pageParam }) =>
+				getUserConversationList({
+					userId,
+					paginationOptions: {
+						page: pageParam,
+						limit: 10,
+					},
+				}),
+			getNextPageParam: (lastPage) => {
+				const { pagination } = lastPage;
+				if ("page" in pagination) {
+					const loadedCount = pagination.page * pagination.limit;
+					return loadedCount < pagination.total
+						? pagination.page + 1
+						: undefined;
+				}
+
+				return undefined;
+			},
+		});
+	const firstPage = data?.pages[0];
+	const infoItems = generateInfoItems(firstPage);
+	const detailList = data?.pages.flatMap((page) => page.convDetail) ?? [];
+	const setLoadMoreRef = useObserveReachBottom({
+		root: scrollContainerRef,
+		enabled: Boolean(hasNextPage) && !isFetchingNextPage,
+		rootMargin: "0px 0px 160px 0px",
+		onReachBottom: useCallback(() => {
+			if (!hasNextPage || isFetchingNextPage) return;
+			void fetchNextPage();
+		}, [fetchNextPage, hasNextPage, isFetchingNextPage]),
 	});
-	const infoItems = [
-		{
-			label: "姓名",
-			value: data?.user.name,
-		},
-		{
-			label: "年级",
-			value: data?.user.grade ? GradeLabel[data?.user.grade] : "-",
-		},
-		{
-			label: "性别",
-			value: data?.user.gender ? GenderLabel[data.user.gender] : "-",
-		},
-		{
-			label: "班级",
-			value: data?.user.class,
-		},
-		{
-			label: "对话总轮数",
-			value: data?.convDetail.length,
-		},
-		{
-			label: "上次对话时间",
-			value: data?.convDetail[0]?.time
-				? dayjs.unix(data?.convDetail[0]?.time).format("YYYY-MM-DD HH:mm")
-				: "-",
-		},
-	];
+
 	return (
-		<CardLayout variant={variant} {...props} data-theme="danger">
+		<CardLayout variant={variant} {...props}>
 			<CardHeaderTitle>对话记录</CardHeaderTitle>
 			<CardLayout variant="area" className="mt-6 pb-10.5">
 				<CardHeaderTitle variant="light" className="pb-5.5">
@@ -124,7 +82,7 @@ export default function UserRecords({
 				</CardHeaderTitle>
 				<article className="h-fit w-full flex flex-wrap gap-15">
 					<section className="size-47">
-						<img src={malePng} alt="male" width={188} height={188} />
+						<BigAvatar gender={firstPage?.user.gender} />
 					</section>
 					<section className="grid grid-cols-3 w-115">
 						{infoItems.map((item) => (
@@ -146,7 +104,7 @@ export default function UserRecords({
 								},
 							}}
 							datas={
-								data?.userConvTrend.trendPoints?.map((item) => ({
+								firstPage?.userConvTrend.trendPoints?.map((item) => ({
 									day: formatWeek(item.week),
 									date: item.week,
 									value: item.count,
@@ -160,17 +118,50 @@ export default function UserRecords({
 				<CardHeaderTitle variant="light" className="pb-5.5">
 					对话详情
 				</CardHeaderTitle>
-				<div className="space-y-5.5">
-					{data?.convDetail.map((item) => (
-						<DetailCard key={item.time} item={item} />
-					))}
+				<div
+					ref={scrollContainerRef}
+					className="max-h-180 space-y-5.5 overflow-y-auto pr-2 overflow-gradient"
+					style={{
+						scrollbarWidth: "thin",
+					}}
+				>
+					<userRecordContext.Provider value={{ userId }}>
+						{isLoading ? (
+							<div className="space-y-5.5">
+								{Array.from({ length: 3 }).map((_, index) => (
+									<Skeleton key={index} className="h-48 w-full rounded-2xl" />
+								))}
+							</div>
+						) : detailList.length ? (
+							<>
+								{detailList.map((item) => (
+									<DetailCard
+										key={`${item.conversationId}-${item.time}`}
+										item={item}
+									/>
+								))}
+								<div
+									ref={setLoadMoreRef}
+									className="flex justify-center py-2"
+								/>
+							</>
+						) : (
+							<Empty className="border-none py-10">
+								<EmptyHeader>
+									<EmptyTitle>暂无对话记录</EmptyTitle>
+									<EmptyDescription>这里空空如也~</EmptyDescription>
+								</EmptyHeader>
+							</Empty>
+						)}
+					</userRecordContext.Provider>
 				</div>
 			</CardLayout>
 		</CardLayout>
 	);
 }
 
-const DetailCard = ({ item }: { item: ConvDetail }) => {
+const DetailCard = memo(({ item }: { item: ConvDetail }) => {
+	const { userId } = useContext(userRecordContext);
 	return (
 		<CardLayout
 			variant="card"
@@ -199,10 +190,16 @@ const DetailCard = ({ item }: { item: ConvDetail }) => {
 				/>
 			</div>
 			<div className="grow flex items-end justify-end">
-				<Button variant="detail-gradient" size={"larger"}>
-					查看详情
+				<Button variant="detail-gradient" size={"larger"} asChild>
+					<Link
+						to="/unit/records/$convId"
+						search={{ userId }}
+						params={{ convId: item.conversationId }}
+					>
+						查看详情
+					</Link>
 				</Button>
 			</div>
 		</CardLayout>
 	);
-};
+});

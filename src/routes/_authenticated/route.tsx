@@ -7,14 +7,17 @@ import {
 	PanelIcon,
 	RecordIcon,
 	SetttingIcon,
-	PanelUserIcon,
 	SidebarAlertIcon,
+	SidebarUserIcon,
 } from "@/components/icons";
 
 import Footer from "@layouts/footer";
 import { userStore } from "@/store/user";
 import { Role } from "@/apis/common/constant";
 import { tokenStore } from "@/lib/utils";
+import PanelOutlineIcon from "@/components/icons/sidebar/panel-outline";
+import UserOutlineIcon from "@/components/icons/sidebar/user-outline";
+import AlertFillIcon from "@/components/icons/sidebar/alert-fill";
 
 export const Route = createFileRoute("/_authenticated")({
 	beforeLoad: () => {
@@ -44,24 +47,44 @@ function RouteComponent() {
 						userRole === Role.SUPER_ADMIN
 							? [
 									{
-										icon: PanelIcon,
+										icon: ({ isActive, ...props }) =>
+											isActive ? (
+												<PanelIcon {...props} />
+											) : (
+												<PanelOutlineIcon {...props} />
+											),
 										label: "数据看板",
 										href: "/admin/panel",
 									},
 								]
 							: [
 									{
-										icon: PanelIcon,
+										icon: ({ isActive, ...props }) =>
+											isActive ? (
+												<PanelIcon {...props} />
+											) : (
+												<PanelOutlineIcon {...props} />
+											),
 										label: "数据看板",
 										href: "/unit/panel",
 									},
 									{
-										icon: SidebarAlertIcon,
+										icon: ({ isActive, ...props }) =>
+											isActive ? (
+												<AlertFillIcon {...props} />
+											) : (
+												<SidebarAlertIcon {...props} />
+											),
 										label: "预警管理",
 										href: "/unit/warnings",
 									},
 									{
-										icon: PanelUserIcon,
+										icon: ({ isActive, ...props }) =>
+											isActive ? (
+												<SidebarUserIcon {...props} />
+											) : (
+												<UserOutlineIcon {...props} />
+											),
 										label: "用户管理",
 										href: "/unit/users",
 									},

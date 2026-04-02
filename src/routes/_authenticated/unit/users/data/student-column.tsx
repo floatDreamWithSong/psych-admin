@@ -1,4 +1,9 @@
-import { Gender, GenderLabel, RiskLevel } from "@/apis/common/constant";
+import {
+	Gender,
+	GenderLabel,
+	RiskLevel,
+	RiskLevelLabel,
+} from "@/apis/common/constant";
 import type { UserRemark } from "@/apis/common/type";
 import { UserRemarkDialog } from "@/components/features/user-remark-dialog";
 import { Button } from "@/components/ui/button";
@@ -14,25 +19,18 @@ export type StudentUserRow = {
 	userName: string;
 	gender: Gender;
 	gradeClass: string;
-	level: number;
+	level: RiskLevel;
 	keywords: string[];
 	totalConversationRounds: number;
 	lastConversationTime: number;
 	remark?: UserRemark | null;
 };
 
-const riskLevelLabelMap = new Map<number, string>([
-	[RiskLevel.NORMAL, "正常"],
-	[RiskLevel.LOW, "低风险"],
-	[RiskLevel.MEDIUM, "中风险"],
-	[RiskLevel.HIGH, "高风险"],
-]);
-
 const riskLevelClassMap = new Map<number, string>([
-	[RiskLevel.NORMAL, "bg-[#96C0FF]"],
-	[RiskLevel.LOW, "bg-[#9E9EFF]"],
-	[RiskLevel.MEDIUM, "bg-[#8686FF]"],
-	[RiskLevel.HIGH, "bg-[#F33838]"],
+	[RiskLevel.NORMAL, "bg-primary"],
+	[RiskLevel.LOW, "bg-destructive/50"],
+	[RiskLevel.MEDIUM, "bg-destructive/70"],
+	[RiskLevel.HIGH, "bg-destructive"],
 ]);
 
 export const StudentColumns: Array<ColumnDef<StudentUserRow>> = [
@@ -48,7 +46,7 @@ export const StudentColumns: Array<ColumnDef<StudentUserRow>> = [
 						riskLevelClassMap.get(level),
 					)}
 				>
-					{riskLevelLabelMap.get(level) || `等级${level}`}
+					{RiskLevelLabel[level]}
 				</span>
 			);
 		},
@@ -97,7 +95,14 @@ export const StudentColumns: Array<ColumnDef<StudentUserRow>> = [
 		accessorKey: "keywords",
 		header: "近期关键词",
 		cell: ({ row }) => (
-			<span className="line-clamp-1 max-w-56 text-destructive">
+			<span
+				className={cn(
+					"line-clamp-1 max-w-56",
+					row.original.level !== RiskLevel.NORMAL
+						? "text-destructive"
+						: "text-primary",
+				)}
+			>
 				{row.original.keywords.length > 0
 					? row.original.keywords.join("、")
 					: "--"}
@@ -110,7 +115,11 @@ export const StudentColumns: Array<ColumnDef<StudentUserRow>> = [
 		cell: ({ row }) => (
 			<>
 				<Button variant="link" asChild>
-					<Link to="/unit/users/$id" params={{ id: row.original.id }}>
+					<Link
+						to="/unit/users/$id"
+						params={{ id: row.original.id }}
+						search={{ needAlarm: row.original.level !== RiskLevel.NORMAL }}
+					>
 						<EyeIcon className="size-4" />
 						查看详情
 					</Link>

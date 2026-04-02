@@ -20,19 +20,27 @@ import {
 import { useStore } from "zustand";
 import { userStore } from "@/store/user";
 import { useState } from "react";
-import { Emotion, ProcessStatus } from "@/apis/common/constant";
+import {
+	EmotionLevel,
+	EmotionLevelLabel,
+	ProcessStatus,
+} from "@/apis/common/constant";
 import { getAlarmList } from "@/apis/dashboard/alarm";
 import { alarmUserColumns, type AlarmUserRow } from "../data/alarm-user-column";
 
 const AlarmUserTable = () => {
 	const unitId = useStore(userStore, (state) => state.user!.unitId);
-	const [emotion, setEmotion] = useState<Emotion | "all">("all");
+	const [emotionLevel, setEmotionLevel] = useState<EmotionLevel | "all">("all");
 	const [status, setStatus] = useState<ProcessStatus | "all">("all");
 	const [keyword, setKeyword] = useState("");
 
-	const tableKey = ["unit-alarm-list", unitId, emotion, status, keyword].join(
-		"|",
-	);
+	const tableKey = [
+		"unit-alarm-list",
+		unitId,
+		emotionLevel,
+		status,
+		keyword,
+	].join("|");
 
 	const queryFn: NormalTableQueryFn<AlarmUserRow> = async ({
 		pageIndex,
@@ -40,7 +48,7 @@ const AlarmUserTable = () => {
 	}) => {
 		const { records, pagination } = await getAlarmList({
 			unitId,
-			emotion: emotion === "all" ? undefined : emotion,
+			emotion: emotionLevel === "all" ? undefined : emotionLevel,
 			status: status === "all" ? undefined : status,
 			keyword: keyword.trim().length > 0 ? keyword.trim() : undefined,
 			paginationOptions: {
@@ -52,6 +60,7 @@ const AlarmUserTable = () => {
 		return {
 			data: records.map((record) => ({
 				id: record.id,
+				userId: record.user.id,
 				emotion: record.emotion,
 				userName: record.user.name,
 				userCode: record.user.code,
@@ -72,12 +81,12 @@ const AlarmUserTable = () => {
 				<CardHeaderTitle variant="light">高风险用户详情</CardHeaderTitle>
 				<div className="flex gap-3 flex-wrap">
 					<Select
-						value={emotion.toString()}
+						value={emotionLevel.toString()}
 						onValueChange={(value) => {
 							if (value === "all") {
-								setEmotion("all");
+								setEmotionLevel("all");
 							} else {
-								setEmotion(Number(value) as Emotion);
+								setEmotionLevel(Number(value) as EmotionLevel);
 							}
 						}}
 					>
@@ -87,10 +96,11 @@ const AlarmUserTable = () => {
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">全部类型</SelectItem>
-							<SelectItem value={Emotion.NORMAL.toString()}>正向</SelectItem>
-							<SelectItem value={Emotion.DEPRESS.toString()}>负面</SelectItem>
-							<SelectItem value={Emotion.NEGATIVE.toString()}>中性</SelectItem>
-							<SelectItem value={Emotion.DANGER.toString()}>危险</SelectItem>
+							{Object.values(EmotionLevel).map((emotionLevel) => (
+								<SelectItem key={emotionLevel} value={emotionLevel.toString()}>
+									{EmotionLevelLabel[emotionLevel]}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 					<Select
@@ -137,7 +147,7 @@ const AlarmUserTable = () => {
 				queryKey={[
 					"unit-alarm-list",
 					unitId,
-					emotion.toString(),
+					emotionLevel.toString(),
 					status.toString(),
 					keyword,
 				]}

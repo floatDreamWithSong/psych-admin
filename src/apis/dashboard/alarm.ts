@@ -5,7 +5,7 @@ import type {
 	User,
 	// UserInfo,
 } from "../common/type";
-import type { Emotion, ProcessStatus } from "../common/constant";
+import type { EmotionLevel, ProcessStatus } from "../common/constant";
 
 export interface AlarmOverview {
 	pending: number;
@@ -20,9 +20,9 @@ export interface AlarmOverview {
 
 export interface CoreapiAlarmRecord {
 	/**
-	 * 情绪状态
+	 * 情绪状态等级
 	 */
-	emotion: string;
+	emotion: EmotionLevel;
 	/**
 	 * 唯一Id
 	 */
@@ -60,7 +60,7 @@ export const getAlarmOverview = (data: { unitId: string }) =>
 //  高风险用户列表
 export const getAlarmList = (data: {
 	unitId: string;
-	emotion?: Emotion;
+	emotion?: EmotionLevel;
 	keyword?: string;
 	paginationOptions: BasicPaginationOption;
 	status?: ProcessStatus;

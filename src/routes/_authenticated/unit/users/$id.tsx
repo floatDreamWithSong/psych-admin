@@ -3,9 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/unit/users/$id")({
 	component: RouteComponent,
+	validateSearch: (p: { needAlarm?: boolean }) => p,
 });
 
 function RouteComponent() {
 	const { id } = Route.useParams();
-	return <UserRecords userId={id} />;
+	const { needAlarm } = Route.useSearch();
+	return <UserRecords userId={id} data-theme={needAlarm ? "danger" : "cool"} />;
 }

@@ -1,4 +1,9 @@
-import { ProcessStatus, ProcessStatusLabel } from "@/apis/common/constant";
+import {
+	EmotionLevel,
+	EmotionLevelLabel,
+	ProcessStatus,
+	ProcessStatusLabel,
+} from "@/apis/common/constant";
 import type { UserRemark } from "@/apis/common/type";
 import { UserRemarkDialog } from "@/components/features/user-remark-dialog";
 import { Button } from "@/components/ui/button";
@@ -10,7 +15,8 @@ import { EyeIcon } from "lucide-react";
 
 export interface AlarmUserRow {
 	id: string;
-	emotion: string;
+	userId: string;
+	emotion: EmotionLevel;
 	userName: string;
 	userCode: string;
 	gradeClass: string;
@@ -20,13 +26,6 @@ export interface AlarmUserRow {
 	remark?: UserRemark | null;
 	status: ProcessStatus;
 }
-
-const emotionLabelMap = new Map<string, string>([
-	["1", "危险"],
-	["2", "负面"],
-	["3", "中性"],
-	["4", "正向"],
-]);
 
 export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
 	{
@@ -40,7 +39,7 @@ export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
 						"inline-flex min-w-14 items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-medium text-white bg-destructive/70",
 					)}
 				>
-					{emotionLabelMap.get(emotion) || emotion}
+					{EmotionLevelLabel[emotion] || emotion}
 				</span>
 			);
 		},
@@ -107,7 +106,8 @@ export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
 				<Button variant={"link"} className="text-destructive" asChild>
 					<Link
 						to="/unit/users/$id"
-						params={{ id: row.original.id }}
+						params={{ id: row.original.userId }}
+						search={{ needAlarm: true }}
 						className="cursor-pointer border-none bg-transparent text-sm text-gradient-2 hover:underline"
 					>
 						<EyeIcon />
@@ -115,8 +115,8 @@ export const alarmUserColumns: Array<ColumnDef<AlarmUserRow>> = [
 					</Link>
 				</Button>
 				<UserRemarkDialog
-					data-theme="danger"
-					userId={row.original.id}
+					theme="danger"
+					userId={row.original.userId}
 					initialRemark={row.original.remark}
 				/>
 			</>

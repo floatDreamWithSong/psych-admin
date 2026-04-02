@@ -1,4 +1,9 @@
-import { Gender, GradeLabel, RiskLevel } from "@/apis/common/constant";
+import {
+	Gender,
+	GradeLabel,
+	RiskLevel,
+	RiskLevelLabel,
+} from "@/apis/common/constant";
 import { getUserList } from "@/apis/dashboard/user-manage";
 import {
 	NormalTable,
@@ -37,7 +42,7 @@ export const Route = createFileRoute("/_authenticated/unit/users/students")({
 function RouteComponent() {
 	const { unitId } = useRouteContext({ from: "/_authenticated/unit" });
 	const [gender, setGender] = useState<Gender | "all">("all");
-	const [level, setLevel] = useState<number | "all">("all");
+	const [level, setLevel] = useState<RiskLevel | "all">("all");
 	const [keyword, setKeyword] = useState("");
 	const { grade = 0, class: classId = 0 } = useSearch({
 		from: "/_authenticated/unit/users/students",
@@ -120,7 +125,7 @@ function RouteComponent() {
 								setLevel("all");
 								return;
 							}
-							setLevel(Number(value));
+							setLevel(Number(value) as RiskLevel);
 						}}
 					>
 						<Label>风险等级</Label>
@@ -129,12 +134,11 @@ function RouteComponent() {
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">全部等级</SelectItem>
-							<SelectItem value={RiskLevel.NORMAL.toString()}>正常</SelectItem>
-							<SelectItem value={RiskLevel.LOW.toString()}>低风险</SelectItem>
-							<SelectItem value={RiskLevel.MEDIUM.toString()}>
-								中风险
-							</SelectItem>
-							<SelectItem value={RiskLevel.HIGH.toString()}>高风险</SelectItem>
+							{Object.entries(RiskLevelLabel).map(([key, value]) => (
+								<SelectItem key={key} value={key}>
+									{value}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 					<InputGroup className="max-w-52">

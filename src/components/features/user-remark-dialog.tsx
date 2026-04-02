@@ -37,17 +37,15 @@ import { cn } from "@/lib/utils";
 import { createRemark } from "@/apis/dashboard/user-manage";
 import { useStore } from "zustand";
 import { userStore } from "@/store/user";
+import type { Theme } from "@/lib/theme";
 
 export function UserRemarkDialog({
 	userId,
 	initialRemark,
-	// initialStatus,
-	// open,
-	// onOpenChange,
 }: {
 	userId: string;
 	initialRemark?: UserRemark | null;
-	// initialStatus?: ProcessStatus;
+	theme?: Theme;
 }) {
 	const [dialogState, setDialogState] = useDialogState<"remark">();
 	const queryClient = useQueryClient();
