@@ -153,10 +153,21 @@ export const ProcessStatusLabel = {
 export type ProcessStatusLabel =
 	(typeof ProcessStatusLabel)[keyof typeof ProcessStatusLabel];
 
-export const GradeLabel = ["全部", "一年级", "二年级", "三年级"] as const;
+export const GradeLabel = [
+	"全部",
+	"一年级",
+	"二年级",
+	"三年级",
+	"四年级",
+	"五年级",
+	"六年级",
+	"七年级",
+	"八年级",
+	"九年级",
+] as const;
 export type GradeLabel = (typeof GradeLabel)[number];
 
-export const Grade = [0, 1, 2, 3] as const;
+export const Grade = [0, 1, 2, 3, 4, 5, 6, 7] as const;
 export type Grade = (typeof Grade)[number];
 
 export const MessageRole = {
