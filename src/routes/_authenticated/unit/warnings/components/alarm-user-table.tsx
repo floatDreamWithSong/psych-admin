@@ -46,7 +46,7 @@ const AlarmUserTable = () => {
 		pageIndex,
 		pageSize,
 	}) => {
-		const { records, pagination } = await getAlarmList({
+		const raw = await getAlarmList({
 			unitId,
 			emotion: emotionLevel === "all" ? undefined : emotionLevel,
 			status: status === "all" ? undefined : status,
@@ -56,6 +56,8 @@ const AlarmUserTable = () => {
 				limit: pageSize,
 			},
 		});
+		const records = raw?.records ?? [];
+		const pagination = raw?.pagination;
 
 		return {
 			data: records.map((record) => ({
@@ -71,7 +73,8 @@ const AlarmUserTable = () => {
 				remark: record.user.remark,
 				status: record.status,
 			})),
-			total: "total" in pagination ? pagination.total : records.length,
+			total:
+				pagination && "total" in pagination ? pagination.total : records.length,
 		};
 	};
 
