@@ -110,10 +110,14 @@ function RouteComponent() {
 					登录
 				</Button>
 			</form>
-			<div className="fixed bottom-0 text-center text-sm text-muted-foreground p-2">
-				<div>超管：13800009999，SuperAdmin@2026</div>
-				<div>单位测试：69bfb8c0f80ebaf6192169f6，13900000001， UnitAdmin@1</div>
-			</div>
+			{import.meta.env.DEV && (
+				<div className="fixed bottom-0 text-center text-sm text-muted-foreground p-2">
+					<div>超管：13800009999，SuperAdmin@2026</div>
+					<div>
+						单位测试：69bfb8c0f80ebaf6192169f6，13900000001， UnitAdmin@1
+					</div>
+				</div>
+			)}
 		</Form>
 	);
 }
