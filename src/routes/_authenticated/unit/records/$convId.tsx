@@ -5,7 +5,7 @@ import {
 } from "@/apis/dashboard/conversation-record";
 import { CardHeaderTitle, CardLayout } from "@/components/layouts/card-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import malePng from "@/assets/imgs/male.png";
 import femalePng from "@/assets/imgs/female.png";
@@ -17,6 +17,11 @@ import PanelCharts from "@/components/common/charts";
 import { Button } from "@/components/ui/button";
 import { Streamdown } from "streamdown";
 import BigAvatar from "@/components/features/big-avatar";
+import { Fragment, useCallback, useMemo, useRef } from "react";
+import useObserveReachBottom from "@/hooks/use-observe-reach-bottom";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const CONVERSATION_MESSAGES_PAGE_SIZE = 80;
 
 export const Route = createFileRoute("/_authenticated/unit/records/$convId")({
 	component: RouteComponent,
@@ -26,6 +31,7 @@ export const Route = createFileRoute("/_authenticated/unit/records/$convId")({
 function RouteComponent() {
 	const { userId } = Route.useSearch();
 	const { convId } = Route.useParams();
+	const messagesScrollRef = useRef<HTMLDivElement>(null);
 	const { data } = useQuery({
 		queryKey: ["user-records", userId],
 		queryFn: async () => {
@@ -40,18 +46,48 @@ function RouteComponent() {
 		},
 	});
 	const infoItems = generateInfoItems(data);
-	const { data: conversation } = useQuery({
+	const {
+		data: conversationPages,
+		isLoading: isConversationLoading,
+		hasNextPage: hasMoreMessages,
+		isFetchingNextPage: isFetchingMoreMessages,
+		fetchNextPage: fetchMoreMessages,
+	} = useInfiniteQuery({
 		queryKey: ["unit-conversation-conversation", convId],
-		queryFn: async () => {
-			const data = await getConversationContent({
+		initialPageParam: 1,
+		queryFn: async ({ pageParam }) =>
+			getConversationContent({
 				conversationId: convId,
-				paginationOptions: { page: 1, limit: 10000 },
-			});
-			return {
-				...data,
-				messageList: data.messageList.reverse(),
-			};
+				paginationOptions: {
+					page: pageParam,
+					limit: CONVERSATION_MESSAGES_PAGE_SIZE,
+				},
+			}),
+		getNextPageParam: (lastPage) => {
+			const { pagination } = lastPage;
+			if ("page" in pagination) {
+				const loadedCount = pagination.page * pagination.limit;
+				return loadedCount < pagination.total ? pagination.page + 1 : undefined;
+			}
+			return undefined;
 		},
+	});
+	const messageList = useMemo(
+		() =>
+			conversationPages?.pages
+				.slice()
+				.reverse()
+				.flatMap((page) => [...page.messageList].reverse()) ?? [],
+		[conversationPages?.pages],
+	);
+	const setLoadMoreMessagesRef = useObserveReachBottom({
+		root: messagesScrollRef,
+		enabled: Boolean(hasMoreMessages) && !isFetchingMoreMessages,
+		rootMargin: "0px 0px 160px 0px",
+		onReachBottom: useCallback(() => {
+			if (!hasMoreMessages || isFetchingMoreMessages) return;
+			void fetchMoreMessages();
+		}, [fetchMoreMessages, hasMoreMessages, isFetchingMoreMessages]),
 	});
 	const { data: report } = useQuery({
 		queryKey: ["unit-conversation-report", convId],
@@ -106,44 +142,65 @@ function RouteComponent() {
 			</CardLayout>
 			<CardLayout variant="area" className="w-full mt-6">
 				<CardHeaderTitle variant="light">对话记录</CardHeaderTitle>
-				<div className="space-y-6 mt-6">
-					{conversation?.messageList.map((message) => {
-						const isUser = message.role === MessageRole.USER;
-						return (
+				<div
+					ref={messagesScrollRef}
+					className="max-h-180 space-y-6 mt-6 overflow-y-auto pr-2 pt-3 overflow-gradient"
+					style={{ scrollbarWidth: "thin" }}
+				>
+					{isConversationLoading ? (
+						<div className="space-y-6">
+							{Array.from({ length: 4 }).map((_, index) => (
+								<Skeleton key={index} className="h-20 w-full rounded-lg" />
+							))}
+						</div>
+					) : (
+						<>
+							{messageList.map((message) => {
+								if (!message.content?.trim()) {
+									return <Fragment key={message.index} />;
+								}
+								const isUser = message.role === MessageRole.USER;
+								return (
+									<div
+										key={message.index}
+										className={cn(
+											"justify-start flex",
+											isUser ? "flex-row" : "flex-row-reverse",
+										)}
+									>
+										<Avatar className="size-12">
+											<AvatarImage
+												src={
+													isUser
+														? data?.user.gender === Gender.MALE
+															? malePng
+															: femalePng
+														: "/icon.svg"
+												}
+											/>
+											<AvatarFallback>{isUser ? "M" : "A"}</AvatarFallback>
+										</Avatar>
+										<div
+											className={cn(
+												"max-w-3/4 py-3 px-6 rounded-lg shadow-xs",
+												isUser
+													? "ml-3 bg-[#EDEEFF]"
+													: "mr-3 shadow-[3.6px_3.6px_14.4px_#E9F1FC] backdrop-blur-5px",
+											)}
+										>
+											<span className="text-sm leading-7.5 text-[#3B3B53]">
+												{message.content}
+											</span>
+										</div>
+									</div>
+								);
+							})}
 							<div
-								key={message.index}
-								className={cn(
-									"justify-start flex",
-									isUser ? "flex-row" : "flex-row-reverse",
-								)}
-							>
-								<Avatar className="size-12">
-									<AvatarImage
-										src={
-											isUser
-												? data?.user.gender === Gender.MALE
-													? malePng
-													: femalePng
-												: "/icon.svg"
-										}
-									/>
-									<AvatarFallback>{isUser ? "M" : "A"}</AvatarFallback>
-								</Avatar>
-								<div
-									className={cn(
-										"max-w-3/4 py-3 px-6 rounded-lg shadow-xs",
-										isUser
-											? "ml-3 bg-[#EDEEFF]"
-											: "mr-3 shadow-[3.6px_3.6px_14.4px_#E9F1FC] backdrop-blur-5px",
-									)}
-								>
-									<span className="text-sm leading-7.5 text-[#3B3B53]">
-										{message.content}
-									</span>
-								</div>
-							</div>
-						);
-					})}
+								ref={setLoadMoreMessagesRef}
+								className="flex min-h-4 justify-center py-2"
+							/>
+						</>
+					)}
 				</div>
 			</CardLayout>
 			{report && (
