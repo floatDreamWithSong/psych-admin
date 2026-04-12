@@ -8,7 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-const tokenKey = "token";
+const tokenKey = "psych-admin-token";
+
 export const tokenStore = {
 	get: () => {
 		return localStorage.getItem(tokenKey);

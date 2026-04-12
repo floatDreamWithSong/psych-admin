@@ -24,8 +24,10 @@ function RouteComponent() {
 	}) => {
 		const { conversationList, pagination } = await getUnitConversationList({
 			unitId,
-			page: pageIndex + 1,
-			limit: pageSize,
+			paginationOptions: {
+				page: pageIndex + 1,
+				limit: pageSize,
+			},
 		});
 
 		return {

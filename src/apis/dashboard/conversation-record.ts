@@ -56,9 +56,10 @@ export const getReport = (data: { conversationId: string }) =>
 		data,
 	});
 
-export const getUnitConversationList = (
-	data: { unitId: string } & BasicPaginationOption,
-) =>
+export const getUnitConversationList = (data: {
+	unitId: string;
+	paginationOptions: BasicPaginationOption;
+}) =>
 	request<{
 		pagination: BasicPagination;
 		conversationList: Array<{

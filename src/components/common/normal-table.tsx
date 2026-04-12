@@ -77,7 +77,7 @@ export function NormalTable<T>({
 		useState<PaginationState>(initPaginationState);
 	const { pageIndex, pageSize } = pagination;
 
-	const { data, isLoading, isError, error } = useQuery({
+	const { data, isFetched, isError, error } = useQuery({
 		queryKey: [
 			typeof queryKey === "string" ? queryKey : queryKey.join("|"),
 			pageIndex,
@@ -163,7 +163,7 @@ export function NormalTable<T>({
 					))}
 				</TableHeader>
 				<TableBody>
-					{isLoading ? (
+					{!isFetched ? (
 						Array.from({ length: size }).map((_, index) => (
 							<TableRow key={`skeleton-${index}`}>
 								<TableCell colSpan={columns.length} className="text-center">
