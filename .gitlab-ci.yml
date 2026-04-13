@@ -1,0 +1,98 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  LOCAL_DIST_PATH: dist
+
+.build:
+  image: node:24-alpine
+  stage: build
+  before_script:
+  script:
+    - npm config set registry https://mirrors.cloud.tencent.com/npm/
+    - npm install -g pnpm
+    - pnpm pkg delete scripts.prepare
+    - pnpm install
+    - pnpm run build
+  cache:
+    - key: node_modules-$CI_PROJECT_PATH
+      paths:
+        - node_modules
+  artifacts:
+    paths:
+      - $LOCAL_DIST_PATH
+
+build-xh:
+  extends: .build
+  variables:
+    VITE_APP_TITLE: "花狮心理"
+    VITE_APP_DESCRIPTION: "花狮心理"
+    VITE_API_BASE_URL: "https://api.xhpolaris.com/psych"
+    VITE_BACKEND_ENV_HEAD: "x-xh-env"
+
+build-ecnu:
+  extends: .build
+  variables:
+    VITE_APP_TITLE: "花狮心理"
+    VITE_APP_DESCRIPTION: "花狮心理"
+    VITE_API_BASE_URL: "https://api.aiecnu.net/psych"
+    VITE_BACKEND_ENV_HEAD: "x-xh-env"
+
+.default_rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+.deploy:
+  image: harbor.harbor/elion/deploy-helper:v1.0.0
+  stage: deploy
+  rules:
+    - !reference [.default_rules, rules]
+  before_script:
+    - |
+      cat > ~/.cos.yaml <<EOF
+      cos:
+        base:
+          secretid: $FE_SECRET_ID
+          secretkey: $FE_SECRET_KEY
+          sessiontoken: ""
+          protocol: https
+          mode: SecretKey
+          cvmrolename: ""
+          closeautoswitchhost: ""
+          disableencryption: "true"
+        buckets:
+          - name: $BUCKET_NAME
+            alias: $BUCKET_NAME
+            region: ""
+            endpoint: cos.ap-shanghai.myqcloud.com
+            ofs: false
+      EOF
+    - |
+      mkdir -p ~/.tccli && cat > ~/.tccli/default.credential <<EOF
+      {
+      "secretId": "$FE_SECRET_ID",
+      "secretKey": "$FE_SECRET_KEY"
+      }
+      EOF
+
+  script:
+    - coscli sync $LOCAL_DIST_PATH cos://$BUCKET_NAME/ --delete --recursive --force
+    - tccli cdn PurgePathCache --cli-unfold-argument --Paths https://$WEBSITE_HOST/ --FlushType delete
+
+deploy-xh:
+  extends: .deploy
+  needs: [ "build-xh" ]
+  variables:
+    WEBSITE_HOST: psych-admin.xhpolaris.com
+    BUCKET_NAME: psych-admin-1308722423
+    FE_SECRET_ID: $XH_SECRET_ID
+    FE_SECRET_KEY: $XH_SECRET_KEY
+
+deploy-ecnu:
+  extends: .deploy
+  needs: [ "build-ecnu" ]
+  variables:
+    WEBSITE_HOST: psych-admin.aiecnu.net
+    BUCKET_NAME: psych-admin-1332239649
+  # when: manual
