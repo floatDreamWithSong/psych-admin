@@ -53,8 +53,8 @@ build-ecnu:
       cat > ~/.cos.yaml <<EOF
       cos:
         base:
-          secretid: $FE_SECRET_ID
-          secretkey: $FE_SECRET_KEY
+          secretid: $SECRET_ID
+          secretkey: $SECRET_KEY
           sessiontoken: ""
           protocol: https
           mode: SecretKey
@@ -71,8 +71,8 @@ build-ecnu:
     - |
       mkdir -p ~/.tccli && cat > ~/.tccli/default.credential <<EOF
       {
-      "secretId": "$FE_SECRET_ID",
-      "secretKey": "$FE_SECRET_KEY"
+      "secretId": "$SECRET_ID",
+      "secretKey": "$SECRET_KEY"
       }
       EOF
 
@@ -86,8 +86,8 @@ deploy-xh:
   variables:
     WEBSITE_HOST: psych-admin.xhpolaris.com
     BUCKET_NAME: psych-admin-1308722423
-    FE_SECRET_ID: $XH_SECRET_ID
-    FE_SECRET_KEY: $XH_SECRET_KEY
+    SECRET_ID: $XH_SECRET_ID
+    SECRET_KEY: $XH_SECRET_KEY
 
 deploy-ecnu:
   extends: .deploy
@@ -95,4 +95,6 @@ deploy-ecnu:
   variables:
     WEBSITE_HOST: psych-admin.aiecnu.net
     BUCKET_NAME: psych-admin-1332239649
+    SECRET_ID: $FE_SECRET_ID
+    SECRET_KEY: $FE_SECRET_KEY
   # when: manual
