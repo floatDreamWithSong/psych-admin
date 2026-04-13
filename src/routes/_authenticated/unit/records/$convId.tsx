@@ -129,10 +129,12 @@ function RouteComponent() {
 										className="w-86 p-0"
 										containerClassName="h-32"
 										fontRange={[14, 35]}
-										datas={report.keywords.map((item) => ({
-											text: item,
-											weight: 1,
-										}))}
+										datas={Object.entries(report.keywordPercent).map(
+											([item, weight]) => ({
+												text: item,
+												weight,
+											}),
+										)}
 									/>
 								</div>
 							</div>
@@ -219,13 +221,25 @@ function RouteComponent() {
 							<Streamdown caret="block">{report?.body}</Streamdown>
 						</CardLayout>
 						<div className="flex justify-between gap-6">
-							<CardLayout variant="card" className="grow">
+							<CardLayout variant="card" className="grow flex-col">
 								<CardHeaderTitle variant="secondary" className="text-black">
 									主要话题
 								</CardHeaderTitle>
+								<div className="flex flex-wrap gap-4 pt-2">
+									{report.topics.map((topic) => (
+										<div
+											className="text-sm leading-7.5 bg-[#EDEEFF] px-4 py-2 rounded-lg inline-block"
+											key={topic}
+										>
+											{topic}
+										</div>
+									))}
+								</div>
 							</CardLayout>
-							<CardLayout variant="card" className="grow-2">
-								<CardHeaderTitle variant="secondary">建议反馈</CardHeaderTitle>
+							<CardLayout variant="card" className="grow-3">
+								<CardHeaderTitle variant="secondary">
+									建议与反馈
+								</CardHeaderTitle>
 							</CardLayout>
 						</div>
 					</CardLayout>

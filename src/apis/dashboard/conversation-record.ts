@@ -45,11 +45,15 @@ export const getUserConversationList = (data: {
 export const getReport = (data: { conversationId: string }) =>
 	request<{
 		title: string;
-		keywords: string[];
+		keywordPercent: Record<string, number>;
 		digest: string;
 		emotion: Emotion;
 		body: string;
 		needAlarm: boolean;
+		reportId: string;
+		reportStatus: number; // TODO: 等后端确认用处。
+		suggestions: string[] | null; // 需ai生成，可能为空
+		topics: string[];
 	}>({
 		url: "/dashboard/get_report",
 		method: "POST",
